@@ -1,0 +1,39 @@
+package ru.andreev.blog.model.entity;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "post")
+@NoArgsConstructor
+public class Post extends AbstractEntity {
+
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User author;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = true)
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "post")
+    @OrderBy("createdAt")
+    private List<Comment> commentList;
+
+}
