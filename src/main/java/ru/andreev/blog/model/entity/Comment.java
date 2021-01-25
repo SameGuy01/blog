@@ -1,5 +1,6 @@
 package ru.andreev.blog.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "comment")
+@Table(name = "comments")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Comment extends AbstractEntity {
 
     @Column(name = "content", nullable = false)

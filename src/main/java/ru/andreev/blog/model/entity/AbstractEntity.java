@@ -1,5 +1,6 @@
 package ru.andreev.blog.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import javax.persistence.*;
                 @Parameter(name = "sequence_name", value = "ccs_session_sqc")
         })
 @NoArgsConstructor
+@AllArgsConstructor
 public class AbstractEntity {
 
     @Id

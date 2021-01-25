@@ -14,7 +14,8 @@ import java.util.List;
 @Builder
 @Entity
 @NoArgsConstructor
-@Table(name = "user")
+@AllArgsConstructor
+@Table(name = "users")
 public class User extends AbstractEntity {
 
     @Column(name = "firstname", nullable = false)
@@ -32,7 +33,7 @@ public class User extends AbstractEntity {
     @Column(name = "registered_at", nullable = false)
     private LocalDateTime registeredAt;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "author")
     private List<Post> postList;
 
     @Column(name = "about")

@@ -1,5 +1,6 @@
 package ru.andreev.blog.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +14,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category extends AbstractEntity{
 
     @Column(name = "title", nullable = false)

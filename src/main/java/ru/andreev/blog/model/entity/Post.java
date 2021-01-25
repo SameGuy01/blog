@@ -1,5 +1,6 @@
 package ru.andreev.blog.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Post extends AbstractEntity {
 
     @Column(name = "content", nullable = false)
@@ -29,7 +31,7 @@ public class Post extends AbstractEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = true)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "post")
