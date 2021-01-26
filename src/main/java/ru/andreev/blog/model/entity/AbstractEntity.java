@@ -14,7 +14,7 @@ import javax.persistence.*;
 @MappedSuperclass
 @GenericGenerator(
         name = "abstract_entity_generator",
-        strategy = "enhanced-sequence",
+        strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = {
                 @Parameter(name = "optimizer", value = "pooled-lo"),
                 @Parameter(name = "initial_value", value = "1"),
