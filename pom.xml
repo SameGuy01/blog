@@ -17,6 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <valitaion.version-api>2.0.1.Final</valitaion.version-api>
     </properties>
 
     <dependencies>
@@ -64,6 +65,11 @@
             <version>${jjwt.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${valitaion.version-api}</version>
+        </dependency>
 
     </dependencies>
 
