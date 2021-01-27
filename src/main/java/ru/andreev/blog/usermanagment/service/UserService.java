@@ -1,12 +1,12 @@
 package ru.andreev.blog.usermanagment.service;
 
-import ru.andreev.blog.model.entity.User;
+import ru.andreev.blog.usermanagment.payload.request.LogInRequest;
 import ru.andreev.blog.usermanagment.payload.request.SignUpRequest;
-
-import java.util.List;
-import java.util.Optional;
+import ru.andreev.blog.usermanagment.payload.responce.JwtResponse;
 
 public interface UserService {
+
+    JwtResponse authenticateUser(LogInRequest logInRequest);
 
     void registerUser(SignUpRequest signUpRequest);
 

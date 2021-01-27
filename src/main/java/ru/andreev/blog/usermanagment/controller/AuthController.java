@@ -2,7 +2,9 @@ package ru.andreev.blog.usermanagment.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.andreev.blog.usermanagment.payload.request.LogInRequest;
 import ru.andreev.blog.usermanagment.payload.request.SignUpRequest;
+import ru.andreev.blog.usermanagment.payload.responce.JwtResponse;
 import ru.andreev.blog.usermanagment.payload.responce.MessageResponse;
 import ru.andreev.blog.usermanagment.service.UserService;
 
@@ -18,9 +20,11 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
-    public ResponseEntity<?> test(){
-        return ResponseEntity.ok(new MessageResponse("ok"));
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser (@Valid @RequestBody LogInRequest logInRequest){
+        JwtResponse jwtResponse = userService.authenticateUser(logInRequest);
+        return ResponseEntity.ok(jwtResponse);
+
     }
 
     @PostMapping("/signup")

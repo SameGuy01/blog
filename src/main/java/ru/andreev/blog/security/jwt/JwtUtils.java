@@ -21,7 +21,7 @@ public class JwtUtils {
     @Value("${blog.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    private String generateJwtToken(Authentication authentication){
+    public String generateJwtToken(Authentication authentication){
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
