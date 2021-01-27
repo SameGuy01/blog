@@ -50,7 +50,7 @@ public class User extends AbstractEntity {
     private Set<Role> roles = new HashSet<>();
 
     @Column(name = "active")
-    private boolean isActive;
+    private Boolean isActive;
 
     public User(String firstName, String lastName, String username, String email, String password) {
         this.firstName = firstName;

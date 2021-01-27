@@ -1,9 +1,6 @@
 package ru.andreev.blog.usermanagment.payload.responce;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,14 +8,17 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class JwtResponse {
 
     private String token;
+    @Builder.Default
     private String type = "Bearer";
     private Long id;
     private String username;
     private String email;
     private List<String> roles;
+    private Boolean isActive;
 
 
 }
