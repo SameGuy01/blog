@@ -1,4 +1,4 @@
-package ru.andreev.blog.model.entity;
+package ru.andreev.blog.domain.model.entity;
 
 import lombok.*;
 
@@ -37,7 +37,7 @@ public class User extends AbstractEntity {
     @Column(name = "registered_at", nullable = false)
     private LocalDateTime registeredAt;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "user")
     private List<Post> postList;
 
     @Column(name = "about")

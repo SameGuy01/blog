@@ -1,4 +1,4 @@
-package ru.andreev.blog.usermanagment.payload.responce;
+package ru.andreev.blog.domain.dto.response;
 
 import lombok.*;
 

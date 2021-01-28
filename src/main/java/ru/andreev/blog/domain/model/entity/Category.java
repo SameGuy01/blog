@@ -1,4 +1,4 @@
-package ru.andreev.blog.model.entity;
+package ru.andreev.blog.domain.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,12 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category extends AbstractEntity{
-
     @Column(name = "title", nullable = false)
     private String title;
-
-    @Column(name = "info", nullable = false)
-    private String info;
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "category")
     private List<Post> postList;

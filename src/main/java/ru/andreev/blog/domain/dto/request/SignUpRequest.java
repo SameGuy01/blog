@@ -1,4 +1,4 @@
-package ru.andreev.blog.usermanagment.payload.request;
+package ru.andreev.blog.domain.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +23,6 @@ public class SignUpRequest {
     @Size(max = 50)
     @Email
     private String email;
-
 
     @NotBlank
     @Size(min = 6, max = 40)

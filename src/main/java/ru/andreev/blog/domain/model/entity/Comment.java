@@ -1,4 +1,4 @@
-package ru.andreev.blog.model.entity;
+package ru.andreev.blog.domain.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

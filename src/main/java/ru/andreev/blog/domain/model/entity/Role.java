@@ -1,8 +1,8 @@
-package ru.andreev.blog.model.entity;
+package ru.andreev.blog.domain.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.andreev.blog.model.enums.ERole;
+import ru.andreev.blog.domain.model.enums.ERole;
 
 import javax.persistence.*;
 

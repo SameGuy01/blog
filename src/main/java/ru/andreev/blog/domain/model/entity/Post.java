@@ -1,4 +1,4 @@
-package ru.andreev.blog.model.entity;
+package ru.andreev.blog.domain.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class Post extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User author;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

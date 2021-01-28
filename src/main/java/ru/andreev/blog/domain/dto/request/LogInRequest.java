@@ -1,4 +1,4 @@
-package ru.andreev.blog.usermanagment.payload.request;
+package ru.andreev.blog.domain.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
