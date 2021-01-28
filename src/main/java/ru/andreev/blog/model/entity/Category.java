@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
@@ -25,6 +22,6 @@ public class Category extends AbstractEntity{
     @Column(name = "info", nullable = false)
     private String info;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "category")
     private List<Post> postList;
 }

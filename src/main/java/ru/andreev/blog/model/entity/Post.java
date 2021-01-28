@@ -34,7 +34,7 @@ public class Post extends AbstractEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     @OrderBy("createdAt")
     private List<Comment> commentList;
 
