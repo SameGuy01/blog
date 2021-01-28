@@ -2,16 +2,16 @@ package ru.andreev.blog.usermanagment.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.andreev.blog.usermanagment.payload.request.LogInRequest;
-import ru.andreev.blog.usermanagment.payload.request.SignUpRequest;
-import ru.andreev.blog.usermanagment.payload.responce.JwtResponse;
-import ru.andreev.blog.usermanagment.payload.responce.MessageResponse;
+import ru.andreev.blog.domain.dto.request.LogInRequest;
+import ru.andreev.blog.domain.dto.request.SignUpRequest;
+import ru.andreev.blog.domain.dto.response.JwtResponse;
+import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.usermanagment.service.UserService;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v/0/auth")
+@RequestMapping(produces = "application/json", path = "/api/v/0/auth")
 public class AuthController {
 
     private final UserService userService;

@@ -1,8 +1,8 @@
 package ru.andreev.blog.usermanagment.service;
 
-import ru.andreev.blog.usermanagment.payload.request.LogInRequest;
-import ru.andreev.blog.usermanagment.payload.request.SignUpRequest;
-import ru.andreev.blog.usermanagment.payload.responce.JwtResponse;
+import ru.andreev.blog.domain.dto.request.LogInRequest;
+import ru.andreev.blog.domain.dto.request.SignUpRequest;
+import ru.andreev.blog.domain.dto.response.JwtResponse;
 
 public interface UserService {
 

@@ -2,8 +2,8 @@ package ru.andreev.blog.usermanagment.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.andreev.blog.model.entity.Role;
-import ru.andreev.blog.model.enums.ERole;
+import ru.andreev.blog.domain.model.entity.Role;
+import ru.andreev.blog.domain.model.enums.ERole;
 
 import java.util.Optional;
 

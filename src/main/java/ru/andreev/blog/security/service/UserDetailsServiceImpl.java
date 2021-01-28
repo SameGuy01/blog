@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.andreev.blog.model.entity.User;
+import ru.andreev.blog.domain.model.entity.User;
 import ru.andreev.blog.usermanagment.repository.UserRepository;
 
 @Service

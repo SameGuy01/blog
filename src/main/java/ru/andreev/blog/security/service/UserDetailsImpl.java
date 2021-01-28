@@ -3,7 +3,7 @@ package ru.andreev.blog.security.service;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.andreev.blog.model.entity.User;
+import ru.andreev.blog.domain.model.entity.User;
 
 import java.util.Collection;
 import java.util.List;
