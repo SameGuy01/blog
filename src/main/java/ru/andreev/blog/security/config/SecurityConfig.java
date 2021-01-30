@@ -55,7 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         http.authorizeRequests()
-                .antMatchers("/api/v/0/auth/**").permitAll();
+                .antMatchers("/api/v/0/auth/**").permitAll()
+                .antMatchers("/api/v/0/**").permitAll()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
