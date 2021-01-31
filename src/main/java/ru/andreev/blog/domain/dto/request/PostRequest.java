@@ -7,9 +7,9 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class PostRequest {
 
-    @NotBlank
+    @NotBlank(message = "Content must be not empty")
     private String content;
 
-    @NotBlank
-    private Long categoryId;
+    @NotBlank(message = "Category id must be not empty")
+    private String categoryId;
 }
