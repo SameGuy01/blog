@@ -1,5 +1,6 @@
 package ru.andreev.blog.usermanagment.service.impl;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.domain.model.entity.Role;
 import ru.andreev.blog.domain.model.entity.User;
 import ru.andreev.blog.domain.model.enums.ERole;
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public JwtResponse authenticateUser(LogInRequest logInRequest) {
+    public ResponseEntity<?> authenticateUser(LogInRequest logInRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(logInRequest.getUsername(), logInRequest.getPassword()));
 
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return JwtResponse.builder()
+        JwtResponse jwtResponse = JwtResponse.builder()
                 .id(userDetails.getId())
                 .token(jwtToken)
                 .email(userDetails.getEmail())
@@ -66,10 +68,24 @@ public class UserServiceImpl implements UserService {
                 .roles(roles)
                 .isActive(userDetails.isEnabled())
                 .build();
+
+        return ResponseEntity.ok(jwtResponse);
     }
 
     @Override
-    public void registerUser(SignUpRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(SignUpRequest signUpRequest) {
+
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
+        }
+
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
 
         User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(),
                 signUpRequest.getUsername(), signUpRequest.getEmail(),
@@ -109,6 +125,8 @@ public class UserServiceImpl implements UserService {
         user.setIsActive(true);
         user.setRoles(roles);
         userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
     @Override

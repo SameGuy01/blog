@@ -4,8 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.andreev.blog.domain.dto.request.LogInRequest;
 import ru.andreev.blog.domain.dto.request.SignUpRequest;
-import ru.andreev.blog.domain.dto.response.JwtResponse;
-import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.usermanagment.service.UserService;
 
 import javax.validation.Valid;
@@ -22,28 +20,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser (@Valid @RequestBody LogInRequest logInRequest){
-        JwtResponse jwtResponse = userService.authenticateUser(logInRequest);
-        return ResponseEntity.ok(jwtResponse);
-
+        return userService.authenticateUser(logInRequest);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody
                                                       SignUpRequest signUpRequest){
-        if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
-
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
-
-        userService.registerUser(signUpRequest);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+       return userService.registerUser(signUpRequest);
     }
 }
