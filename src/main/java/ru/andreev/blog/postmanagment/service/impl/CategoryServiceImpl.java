@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> save(@Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         Category category = categoryMapper.toEntity(categoryRequest);
         categoryRepository.save(category);
         return new ResponseEntity<>(HttpStatus.CREATED);
