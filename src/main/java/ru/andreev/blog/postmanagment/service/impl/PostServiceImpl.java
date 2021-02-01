@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(id));
 
-        return ResponseEntity.ok(post);
+        return ResponseEntity.ok(postMapper.toDto(post));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService {
         Post post = postMapper.toEntity(postRequest);
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User is not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
         post.setUser(user);
         post.setCategory(category);

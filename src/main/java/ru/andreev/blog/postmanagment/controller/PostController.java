@@ -6,7 +6,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.andreev.blog.domain.dto.request.PostRequest;
-import ru.andreev.blog.domain.model.entity.User;
 import ru.andreev.blog.postmanagment.service.PostService;
 
 import javax.validation.Valid;
@@ -26,5 +25,10 @@ public class PostController {
     public ResponseEntity<?> createNewPost(@Valid @RequestBody final PostRequest postRequest,
                                            @AuthenticationPrincipal UserDetails userDetails){
         return postService.savePost(postRequest,userDetails.getUsername());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        return postService.findById(id);
     }
 }
