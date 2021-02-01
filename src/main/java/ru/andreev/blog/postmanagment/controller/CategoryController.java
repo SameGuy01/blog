@@ -29,9 +29,9 @@ public class CategoryController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMINE') or hasRole('MODERATOR')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> createNewCategory(@Valid @RequestBody final CategoryRequest categoryRequest){
         System.out.println(categoryRequest.getTitle());
-        return categoryService.save(categoryRequest);
+        return categoryService.saveCategory(categoryRequest);
     }
 }

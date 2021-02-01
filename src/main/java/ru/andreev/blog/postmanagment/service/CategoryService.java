@@ -13,5 +13,5 @@ public interface CategoryService {
 
     ResponseEntity<?> findById(Long id);
 
-    ResponseEntity<?> save(CategoryRequest categoryRequest);
+    ResponseEntity<?> saveCategory(CategoryRequest categoryRequest);
 }
