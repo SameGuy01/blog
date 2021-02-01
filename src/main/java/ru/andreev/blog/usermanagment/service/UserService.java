@@ -10,9 +10,4 @@ public interface UserService {
     ResponseEntity<?> authenticateUser(LogInRequest logInRequest);
 
     ResponseEntity<?> registerUser(SignUpRequest signUpRequest);
-
-    boolean existsByUsername(String username);
-
-    boolean existsByEmail(String email);
-
 }
