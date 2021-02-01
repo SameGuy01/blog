@@ -4,21 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-public class PostResponse {
-
-    private String id;
+public class CommentResponse {
 
     private String content;
 
-    private AuthorResponse user;
+    private AuthorResponse commentator;
 
-    private SimpleCategoryResponse category;
+    private String postId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
-
-    private List<CommentResponse> commentList;
 }
