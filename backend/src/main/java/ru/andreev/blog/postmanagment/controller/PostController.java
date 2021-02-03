@@ -5,7 +5,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import ru.andreev.blog.domain.dto.request.PostEditRequest;
 import ru.andreev.blog.domain.dto.request.PostRequest;
+import ru.andreev.blog.domain.model.entity.Post;
 import ru.andreev.blog.postmanagment.service.PostService;
 
 import javax.validation.Valid;
@@ -30,5 +32,12 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
         return postService.findById(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePost(@PathVariable Long id,
+                                        @Valid @RequestBody final PostEditRequest postEditRequest,
+                                        @AuthenticationPrincipal UserDetails userDetails){
+        return postService.updatePost(postEditRequest, userDetails.getUsername());
     }
 }
