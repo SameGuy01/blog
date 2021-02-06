@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> findById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFountException(id));
+                .orElseThrow(() -> new CategoryNotFountException(String.valueOf(id)));
         return ResponseEntity.ok(categoryMapper.toDto(category));
     }
 

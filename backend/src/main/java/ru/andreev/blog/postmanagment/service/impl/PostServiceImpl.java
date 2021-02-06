@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<?> findById(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(id));
+                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
 
         return ResponseEntity.ok(postMapper.toDto(post));
     }
@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> savePost(PostRequest postRequest, String username) {
 
         Category category = categoryRepository.findById(Long.valueOf(postRequest.getCategoryId()))
-                .orElseThrow(() -> new CategoryNotFountException(Long.valueOf(postRequest.getCategoryId())));
+                .orElseThrow(() -> new CategoryNotFountException(postRequest.getCategoryId()));
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
@@ -68,7 +68,7 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> updatePost(PostEditRequest postEditRequest, String username) {
 
         Post fromDbPost = postRepository.findById(Long.valueOf(postEditRequest.getId()))
-                .orElseThrow(() -> new PostNotFoundException(Long.valueOf(postEditRequest.getId())));
+                .orElseThrow(() -> new PostNotFoundException(postEditRequest.getId()));
 
         if(!fromDbPost.getUser().getUsername().equals(username)){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

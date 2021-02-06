@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         Post post = postRepository.findById(Long.valueOf(commentRequest.getPostId()))
-                .orElseThrow(() -> new PostNotFoundException(Long.valueOf(commentRequest.getPostId())));
+                .orElseThrow(() -> new PostNotFoundException(commentRequest.getPostId()));
 
         Comment comment = commentMapper.toEntity(commentRequest);
         comment.setPost(post);
