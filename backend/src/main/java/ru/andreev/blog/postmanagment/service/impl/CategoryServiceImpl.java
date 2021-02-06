@@ -1,8 +1,6 @@
 package ru.andreev.blog.postmanagment.service.impl;
 
-import com.sun.mail.iap.Response;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import ru.andreev.blog.postmanagment.exception.CategoryNotFountException;
 import ru.andreev.blog.postmanagment.repository.CategoryRepository;
 import ru.andreev.blog.postmanagment.service.CategoryService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +51,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.toEntity(categoryRequest);
         categoryRepository.save(category);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<?> findByTitle(String title) {
+        Category category = categoryRepository.findByTitle(title)
+                .orElseThrow(() -> new CategoryNotFountException(title));
+        return ResponseEntity.ok(category);
     }
 
 }
