@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> findByTitle(String title) {
         Category category = categoryRepository.findByTitle(title)
                 .orElseThrow(() -> new CategoryNotFountException(title));
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(categoryMapper.toDto(category));
     }
 
 }
