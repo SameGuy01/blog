@@ -36,28 +36,28 @@ public class CategoryServiceImpl implements CategoryService {
                 .stream()
                 .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(categoryListResponse);
+        return ResponseEntity.ok().body(categoryListResponse);
     }
 
     @Override
     public ResponseEntity<?> findById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFountException(String.valueOf(id)));
-        return ResponseEntity.ok(categoryMapper.toDto(category));
+        return ResponseEntity.ok().body(categoryMapper.toDto(category));
     }
 
     @Override
     public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         Category category = categoryMapper.toEntity(categoryRequest);
         categoryRepository.save(category);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryMapper.toDto(category));
     }
 
     @Override
     public ResponseEntity<?> findByTitle(String title) {
         Category category = categoryRepository.findByTitle(title)
                 .orElseThrow(() -> new CategoryNotFountException(title));
-        return ResponseEntity.ok(categoryMapper.toDto(category));
+        return ResponseEntity.ok().body(categoryMapper.toDto(category));
     }
 
 }

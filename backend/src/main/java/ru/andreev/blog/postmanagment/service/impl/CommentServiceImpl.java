@@ -49,6 +49,6 @@ public class CommentServiceImpl implements CommentService {
         comment.setCommentator(user);
         commentRepository.save(comment);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentMapper.toDto(comment));
     }
 }

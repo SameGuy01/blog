@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
 
-        return ResponseEntity.ok(postMapper.toDto(post));
+        return ResponseEntity.ok().body(postMapper.toDto(post));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
         post.setCreatedAt(LocalDateTime.now());
 
         postRepository.save(post);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok().body(postMapper.toDto(post));
     }
 
     @Override
