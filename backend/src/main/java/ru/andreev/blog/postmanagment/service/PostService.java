@@ -10,5 +10,7 @@ public interface PostService {
 
     ResponseEntity<?> savePost(PostRequest postRequest, String username);
 
-    ResponseEntity<?> updatePost(PostEditRequest postEditRequest, String username);
+    ResponseEntity<?> updatePost(Long id, PostEditRequest postEditRequest, String username);
+
+    ResponseEntity<?> deleteById(Long id, String username);
 }

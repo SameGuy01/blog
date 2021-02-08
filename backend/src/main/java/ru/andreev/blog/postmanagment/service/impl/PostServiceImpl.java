@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.andreev.blog.domain.dto.request.PostEditRequest;
 import ru.andreev.blog.domain.dto.request.PostRequest;
+import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.domain.mapper.PostMapper;
 import ru.andreev.blog.domain.model.entity.Category;
 import ru.andreev.blog.domain.model.entity.Post;
@@ -65,13 +66,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<?> updatePost(PostEditRequest postEditRequest, String username) {
+    public ResponseEntity<?> updatePost(Long id, PostEditRequest postEditRequest, String username) {
 
-        Post fromDbPost = postRepository.findById(Long.valueOf(postEditRequest.getId()))
-                .orElseThrow(() -> new PostNotFoundException(postEditRequest.getId()));
+        Post fromDbPost = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
 
         if(!fromDbPost.getUser().getUsername().equals(username)){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("User can only update their own posts."));
         }
 
         Post updatedPost = postMapper.toEntity(postEditRequest);
@@ -80,6 +81,18 @@ public class PostServiceImpl implements PostService {
         fromDbPost.setUpdatedAt(LocalDateTime.now());
         postRepository.save(fromDbPost);
 
-        return ResponseEntity.ok(postMapper.toDto(fromDbPost));
+        return ResponseEntity.ok().body(postMapper.toDto(fromDbPost));
+    }
+
+    @Override
+    public ResponseEntity<?> deleteById(Long id, String username) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
+
+        if(!post.getUser().getUsername().equals(username)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Users can only delete their own posts."));
+        }
+
+        return ResponseEntity.ok().body(new MessageResponse("Post " + id + " is deleted successful."));
     }
 }

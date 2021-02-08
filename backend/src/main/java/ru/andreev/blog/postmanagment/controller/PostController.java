@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.andreev.blog.domain.dto.request.PostEditRequest;
 import ru.andreev.blog.domain.dto.request.PostRequest;
-import ru.andreev.blog.domain.model.entity.Post;
 import ru.andreev.blog.postmanagment.service.PostService;
 
 import javax.validation.Valid;
@@ -22,22 +21,30 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createNewPost(@Valid @RequestBody final PostRequest postRequest,
-                                           @AuthenticationPrincipal UserDetails userDetails){
-        return postService.savePost(postRequest,userDetails.getUsername());
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findPostById(@PathVariable Long id){
         return postService.findById(id);
     }
 
+    @PostMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> createNewPost(@Valid @RequestBody final PostRequest postRequest,
+                                           @AuthenticationPrincipal final UserDetails userDetails){
+        return postService.savePost(postRequest,userDetails.getUsername());
+    }
+
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> updatePost(@PathVariable Long id,
                                         @Valid @RequestBody final PostEditRequest postEditRequest,
-                                        @AuthenticationPrincipal UserDetails userDetails){
-        return postService.updatePost(postEditRequest, userDetails.getUsername());
+                                        @AuthenticationPrincipal final UserDetails userDetails){
+        return postService.updatePost(id,postEditRequest, userDetails.getUsername());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deletePost(@PathVariable Long id,
+                                        @AuthenticationPrincipal final UserDetails userDetails){
+        return postService.deleteById(id, userDetails.getUsername());
     }
 }
