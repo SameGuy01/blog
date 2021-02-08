@@ -8,6 +8,7 @@ import ru.andreev.blog.postmanagment.service.CategoryService;
 
 import javax.validation.Valid;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(produces = "application/json", path = "/api/v/0/categories")
 public class CategoryController {

@@ -11,6 +11,7 @@ import ru.andreev.blog.postmanagment.service.PostService;
 
 import javax.validation.Valid;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(produces = "application/json", path = "/api/v/0/posts")
 public class PostController {
