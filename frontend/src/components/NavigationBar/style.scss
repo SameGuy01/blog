@@ -1,0 +1,43 @@
+header {
+  background: #bebebe;
+
+  .logo {
+    font-size: larger;
+    font-weight: bold;
+  }
+
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 1.3em;
+    display: grid;
+    grid-template-columns: 30% auto;
+    a {
+      color: white;
+    }
+  }
+
+  .nav {
+    justify-self: right;
+
+    ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li{
+        float: left;
+
+        a{
+          padding: 1.5em;
+          text-transform: uppercase;
+          font-size: .8em;
+          text-decoration: none;
+          &:hover {
+            background: #999999;
+          }
+        }
+      }
+    }
+  }
+}
