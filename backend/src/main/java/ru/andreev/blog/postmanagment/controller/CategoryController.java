@@ -29,9 +29,6 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
-    @GetMapping("/titles/{title}")
-    public ResponseEntity<?> getByTitle(@PathVariable String title){ return categoryService.findByTitle(title);}
-
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> createNewCategory(@Valid @RequestBody final CategoryRequest categoryRequest){
