@@ -2,7 +2,7 @@ import './App.css';
 
 import React from 'react';
 
-import NavigationBar from './components/NavigationBar/NavigationBar'
+import NavigationBar from './components/NavigationBar'
 
 class App extends React.Component{
 
