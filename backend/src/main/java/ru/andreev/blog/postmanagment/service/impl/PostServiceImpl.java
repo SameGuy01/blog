@@ -68,8 +68,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<?> updatePost(Long id, PostEditRequest postEditRequest, String username) {
 
-        Post fromDbPost = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
+        Post fromDbPost = getPostById(id);
 
         if(!fromDbPost.getUser().getUsername().equals(username)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("User can only update their own posts."));
@@ -86,13 +85,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<?> deleteById(Long id, String username) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
-
+        Post post = getPostById(id);
         if(!post.getUser().getUsername().equals(username)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Users can only delete their own posts."));
         }
 
         return ResponseEntity.ok().body(new MessageResponse("Post " + id + " is deleted successful."));
+    }
+
+    private Post getPostById(Long id){
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
     }
 }

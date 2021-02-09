@@ -52,12 +52,4 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryMapper.toDto(category));
     }
-
-    @Override
-    public ResponseEntity<?> findByTitle(String title) {
-        Category category = categoryRepository.findByTitle(title)
-                .orElseThrow(() -> new CategoryNotFountException(title));
-        return ResponseEntity.ok().body(categoryMapper.toDto(category));
-    }
-
 }

@@ -14,5 +14,4 @@ public interface CategoryService {
 
     ResponseEntity<?> saveCategory(CategoryRequest categoryRequest);
 
-    ResponseEntity<?> findByTitle(String title);
 }
