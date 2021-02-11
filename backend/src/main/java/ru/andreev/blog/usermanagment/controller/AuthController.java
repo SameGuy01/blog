@@ -8,6 +8,7 @@ import ru.andreev.blog.usermanagment.service.UserService;
 
 import javax.validation.Valid;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(produces = "application/json", path = "/api/v/0/auth")
 public class AuthController {
