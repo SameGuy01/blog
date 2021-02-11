@@ -3,7 +3,9 @@ package ru.andreev.blog.domain.dto.response;
 import lombok.Data;
 
 @Data
-public class AuthorResponse {
+public class UserResponse {
+
+    private String id;
 
     private String username;
 

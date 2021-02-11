@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
 
         JwtResponse jwtResponse = JwtResponse.builder()
-                .id(userDetails.getId())
+                .id(String.valueOf(userDetails.getId()))
                 .token(jwtToken)
                 .email(userDetails.getEmail())
                 .username(userDetails.getUsername())
