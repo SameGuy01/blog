@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 @Data
 public class SimplePostResponse {
 
-    private Long id;
+    private String id;
 
     private String content;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
-    private AuthorResponse user;
+    private UserResponse user;
 }

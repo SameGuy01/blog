@@ -24,13 +24,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CategoryNotFountException.class)
-    public ResponseEntity<?> handlerCategoryNotFound(final CategoryNotFountException exception){
-        ErrorResponse errorResponse = new ErrorResponse("NOT FOUNT", List.of(exception.getMessage()));
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<?> handlerPostNotFound(final PostNotFoundException exception){
         ErrorResponse errorResponse = new ErrorResponse("NOT FOUND", List.of(exception.getMessage()));

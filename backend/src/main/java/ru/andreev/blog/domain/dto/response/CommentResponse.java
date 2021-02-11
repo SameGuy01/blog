@@ -8,9 +8,11 @@ import java.time.LocalDateTime;
 @Data
 public class CommentResponse {
 
+    private String id;
+
     private String content;
 
-    private AuthorResponse commentator;
+    private UserResponse commentator;
 
     private String postId;
 

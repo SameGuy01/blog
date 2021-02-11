@@ -10,6 +10,4 @@ public class PostRequest {
     @NotBlank(message = "Content must be not empty")
     private String content;
 
-    @NotBlank(message = "Category id must be not empty")
-    private String categoryId;
 }

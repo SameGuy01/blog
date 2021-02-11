@@ -10,12 +10,9 @@ import ru.andreev.blog.domain.dto.request.PostEditRequest;
 import ru.andreev.blog.domain.dto.request.PostRequest;
 import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.domain.mapper.PostMapper;
-import ru.andreev.blog.domain.model.entity.Category;
 import ru.andreev.blog.domain.model.entity.Post;
 import ru.andreev.blog.domain.model.entity.User;
-import ru.andreev.blog.postmanagment.exception.CategoryNotFountException;
 import ru.andreev.blog.postmanagment.exception.PostNotFoundException;
-import ru.andreev.blog.postmanagment.repository.CategoryRepository;
 import ru.andreev.blog.postmanagment.repository.PostRepository;
 import ru.andreev.blog.postmanagment.service.PostService;
 import ru.andreev.blog.usermanagment.repository.UserRepository;
@@ -29,13 +26,11 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final CategoryRepository categoryRepository;
 
-    public PostServiceImpl(PostMapper postMapper, UserRepository userRepository, PostRepository postRepository, CategoryRepository categoryRepository) {
+    public PostServiceImpl(PostMapper postMapper, UserRepository userRepository, PostRepository postRepository) {
         this.postMapper = postMapper;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -49,8 +44,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<?> savePost(PostRequest postRequest, String username) {
 
-        Category category = categoryRepository.findById(Long.valueOf(postRequest.getCategoryId()))
-                .orElseThrow(() -> new CategoryNotFountException(postRequest.getCategoryId()));
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
@@ -58,7 +51,6 @@ public class PostServiceImpl implements PostService {
         Post post = postMapper.toEntity(postRequest);
 
         post.setUser(user);
-        post.setCategory(category);
         post.setCreatedAt(LocalDateTime.now());
 
         postRepository.save(post);
