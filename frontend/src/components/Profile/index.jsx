@@ -29,14 +29,14 @@ class Profile extends React.Component {
         const {currentUser} = this.state;
 
         return (
-            <div className="container">
+            <div>
                 {(this.state.userReady) ?
                     <div>
-                        <a href="/login" className="nav-link" onClick={this.logout}>
+                        <a href="/login" onClick={this.logout}>
                         LogOut
                         </a>
 
-                        <header className="jumbotron">
+                        <header>
                             <h3>
                                 <strong>{currentUser.username}</strong>
                             </h3>
@@ -54,11 +54,11 @@ class Profile extends React.Component {
                             <strong>Email:</strong>{" "}
                             {currentUser.email}
                         </p>
-                        {/*<strong>Authorities:</strong>
+                        <strong>Authorities:</strong>
                         <ul>
                             {currentUser.roles &&
                             currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-                        </ul>*/}
+                        </ul>
                     </div>: null}
             </div>
         )
