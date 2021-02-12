@@ -1,13 +1,13 @@
 import './App.css';
 
 import React from 'react';
+import {Route, Switch} from "react-router";
 
 import AuthService from "./services/auth.service"
 
 import Login from "./components/Login";
-import {Route, Switch} from "react-router";
 import Profile from "./components/Profile";
-
+import Signup from "./components/Signup"
 
 class App extends React.Component{
 
@@ -41,6 +41,7 @@ class App extends React.Component{
                 <Switch>
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/profile" component={Profile} />
+                    <Route exact path="/signup" component={Signup} />
                 </Switch>
             </div>
         )
