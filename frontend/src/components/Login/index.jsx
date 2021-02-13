@@ -5,15 +5,16 @@ import AuthService from "../../services/auth.service"
 class Login extends React.Component{
     constructor(props) {
         super(props);
-        this.handleLogin = this.handleLogin.bind(this);
-        this.onChangeUsername = this.onChangeUsername.bind(this);
-        this.onChangePassword = this.onChangePassword.bind(this);
         this.state = {
             username: "",
             password: "",
             loading: false,
             message: ""
         };
+
+        this.handleLogin = this.handleLogin.bind(this);
+        this.onChangeUsername = this.onChangeUsername.bind(this);
+        this.onChangePassword = this.onChangePassword.bind(this);
     }
 
     onChangeUsername(e) {
@@ -36,26 +37,23 @@ class Login extends React.Component{
             loading: true
         });
 
-
-            AuthService.login(this.state.username, this.state.password)
-                .then( () => {
-                    this.props.history.push("/profile");
-                    window.location.reload();
-                    },
-                    error => {
-                        const resMessage =
-                            (error.response &&
-                                error.response.data &&
-                                error.response.data.message) ||
-                            error.message ||
-                            error.toString();
-
-                        this.setState({
-                            loading: false,
-                            message: resMessage
-                        });
-                    }
-                );
+        AuthService.login(this.state.username, this.state.password)
+            .then( () => {
+                this.props.history.push("/profile");
+                window.location.reload();
+                },
+                error => {
+                const resMessage =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                 this.setState({
+                     loading: false,
+                     message: resMessage
+                 });
+            });
 
     }
 

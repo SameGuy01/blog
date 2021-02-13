@@ -6,14 +6,6 @@ class Registration extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.handleRegister = this.handleRegister.bind(this)
-        this.onChangeUsername = this.onChangeUsername.bind(this)
-        this.onChangePassword = this.onChangePassword.bind(this)
-        this.onChangeEmail = this.onChangeEmail.bind(this)
-        this.onChangeFirstname = this.onChangeFirstname.bind(this)
-        this.onChangeLastname = this.onChangeLastname.bind(this)
-
         this.state = {
             username: "",
             email: "",
@@ -23,6 +15,13 @@ class Registration extends React.Component {
             lastname: "",
             firstname: ""
         }
+
+        this.handleRegister = this.handleRegister.bind(this)
+        this.onChangeUsername = this.onChangeUsername.bind(this)
+        this.onChangePassword = this.onChangePassword.bind(this)
+        this.onChangeEmail = this.onChangeEmail.bind(this)
+        this.onChangeFirstname = this.onChangeFirstname.bind(this)
+        this.onChangeLastname = this.onChangeLastname.bind(this)
     }
 
 
