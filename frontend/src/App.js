@@ -8,9 +8,9 @@ import AuthService from "./services/auth.service"
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Signup from "./components/Signup"
+import CreatePost from "./components/CreatePost";
 
 class App extends React.Component{
-
     constructor(props) {
         super(props);
         this.logOut = this.logOut.bind(this);
@@ -42,6 +42,7 @@ class App extends React.Component{
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/profile" component={Profile} />
                     <Route exact path="/signup" component={Signup} />
+                    <Route exacth path="/post" component={CreatePost}/>
                 </Switch>
             </div>
         )
