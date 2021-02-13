@@ -54,7 +54,7 @@ public class PostServiceImpl implements PostService {
         post.setCreatedAt(LocalDateTime.now());
 
         postRepository.save(post);
-        return ResponseEntity.status(HttpStatus.CREATED).body(postMapper.toDto(post));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Post is created successful."));
     }
 
     @Override
