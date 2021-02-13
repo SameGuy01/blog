@@ -32,16 +32,19 @@ class CreatePost extends React.Component{
             .then(response => {
                 console.log(response)
                 this.setState({
-                    message: response.data,
-                    successful: true
+                    message: response.data.message,
+                    successful: true,
+                    content: ""
                 })
             }, error => {
                 console.log(error.response)
                 this.setState({
-                    message: error,
-                    successful: false
+                    message: error.response.data.message,
+                    successful: false,
+                    content: ""
                 });
             });
+
     }
 
     render() {
