@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(produces = "application/json", path = "/api/v/0/posts")
+@RequestMapping(produces = "application/json", path = "/api/v/0/users/{userId}/posts")
 public class PostController {
 
     private final PostService postService;
@@ -22,30 +22,39 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findPostById(@PathVariable Long id){
-        return postService.findById(id);
+    @GetMapping("/")
+    public ResponseEntity<?> getAllByUser(@PathVariable final Long userId){
+        return postService.getAllByUserId(userId);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> findPostById(@PathVariable final Long postId,
+                                          @PathVariable final Long userId) {
+        return postService.findById(postId, userId);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createNewPost(@Valid @RequestBody final PostRequest postRequest,
+    public ResponseEntity<?> createNewPost(@PathVariable final Long userId,
+                                           @Valid @RequestBody final PostRequest postRequest,
                                            @AuthenticationPrincipal final UserDetails userDetails){
-        return postService.savePost(postRequest,userDetails.getUsername());
+        return postService.savePost(userId, postRequest, userDetails.getUsername());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{postId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> updatePost(@PathVariable Long id,
+    public ResponseEntity<?> updatePost(@PathVariable final Long postId,
+                                        @PathVariable final Long userId,
                                         @Valid @RequestBody final PostEditRequest postEditRequest,
                                         @AuthenticationPrincipal final UserDetails userDetails){
-        return postService.updatePost(id,postEditRequest, userDetails.getUsername());
+        return postService.updatePost(postId, userId, postEditRequest, userDetails.getUsername());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> deletePost(@PathVariable Long id,
+    public ResponseEntity<?> deletePost(@PathVariable final Long postId,
+                                        @PathVariable final Long userId,
                                         @AuthenticationPrincipal final UserDetails userDetails){
-        return postService.deleteById(id, userDetails.getUsername());
+        return postService.deleteById(postId, userId, userDetails.getUsername());
     }
 }
