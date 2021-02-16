@@ -6,11 +6,13 @@ import ru.andreev.blog.domain.dto.request.PostRequest;
 
 public interface PostService {
 
-    ResponseEntity<?> findById(Long id);
+    ResponseEntity<?> findById(Long id, Long userId);
 
-    ResponseEntity<?> savePost(PostRequest postRequest, String username);
+    ResponseEntity<?> savePost( Long userId, PostRequest postRequest, String username);
 
-    ResponseEntity<?> updatePost(Long id, PostEditRequest postEditRequest, String username);
+    ResponseEntity<?> updatePost(Long postId, Long userId,  PostEditRequest postEditRequest, String username);
 
-    ResponseEntity<?> deleteById(Long id, String username);
+    ResponseEntity<?> deleteById(Long postId, Long userId, String username);
+
+    ResponseEntity<?> getAllByUserId(Long userId);
 }
