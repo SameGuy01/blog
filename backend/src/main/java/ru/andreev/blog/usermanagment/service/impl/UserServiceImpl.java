@@ -1,18 +1,24 @@
 package ru.andreev.blog.usermanagment.service.impl;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.andreev.blog.domain.dto.request.UserEditRequest;
 import ru.andreev.blog.domain.dto.response.MessageResponse;
+import ru.andreev.blog.domain.mapper.UserMapper;
 import ru.andreev.blog.domain.model.entity.Role;
 import ru.andreev.blog.domain.model.entity.User;
 import ru.andreev.blog.domain.model.enums.ERole;
+import ru.andreev.blog.postmanagment.exception.RoleNotFoundException;
 import ru.andreev.blog.security.jwt.JwtUtils;
 import ru.andreev.blog.security.service.UserDetailsImpl;
 import ru.andreev.blog.domain.dto.request.LogInRequest;
@@ -33,20 +39,28 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final JwtUtils jwtUtils;
+    private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+    private final static String REGISTRATION_SUCCESSFUL = "The user registered successfully.";
+    private final static String UPDATE_SUCCESSFUL = "The user was updated successfully.";
 
-    public UserServiceImpl(JwtUtils jwtUtils, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    private final static String UPDATE_ERROR = "The user can only update their own data.";
+
+    private final static String USERNAME_INVALID = "The username is already taken.";
+    private final static String EMAIL_INVALID = "The email is already taken.";
+
+    public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.jwtUtils = jwtUtils;
+        this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
-
 
     @Override
     public ResponseEntity<?> authenticateUser(LogInRequest logInRequest) {
@@ -55,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtToken = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl      userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -78,13 +92,13 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse(USERNAME_INVALID));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse(EMAIL_INVALID));
         }
 
         User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(),
@@ -95,27 +109,21 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleRepository.findByRole(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            Role userRole = getByRole(ERole.ROLE_USER);
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
-                        Role adminRole = roleRepository.findByRole(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        Role adminRole = getByRole(ERole.ROLE_ADMIN);
                         roles.add(adminRole);
-
                         break;
                     case "mod":
-                        Role modRole = roleRepository.findByRole(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        Role modRole = getByRole(ERole.ROLE_MODERATOR);
                         roles.add(modRole);
-
                         break;
                     default:
-                        Role userRole = roleRepository.findByRole(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        Role userRole = getByRole(ERole.ROLE_USER);
                         roles.add(userRole);
                 }
             });
@@ -126,7 +134,32 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(REGISTRATION_SUCCESSFUL));
+    }
+
+    @Override
+    public ResponseEntity<?> updateUser(Long userId, String username, UserEditRequest userEditRequest) {
+
+        User userFromDb = userRepository.getById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(userId)));
+
+        if(!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userEditRequest.getId()))){
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new MessageResponse(UPDATE_ERROR));
+        }
+
+        User updateUser = userMapper.toDto(userEditRequest);
+
+        BeanUtils.copyProperties(updateUser,userFromDb, "id", "postList", "password", "registeredAt", "roles", "isActive");
+        userRepository.save(userFromDb);
+
+        return ResponseEntity.ok().body(new MessageResponse(UPDATE_SUCCESSFUL));
+    }
+
+    private Role getByRole(ERole erole){
+        return roleRepository.findByRole(erole)
+                .orElseThrow(() -> new RoleNotFoundException(erole.name()));
     }
 
 }
