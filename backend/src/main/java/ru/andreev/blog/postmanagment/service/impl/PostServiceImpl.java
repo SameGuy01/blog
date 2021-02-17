@@ -30,9 +30,9 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    private final static String CREATE_SUCCESS = "The post was created successfully.";
-    private final static String UPDATE_SUCCESS = "The post was updated successfully.";
-    private final static String DELETE_SUCCESS = "The post was deleted successfully";
+    private final static String CREATE_SUCCESSFUL = "The post was created successfully.";
+    private final static String UPDATE_SUCCESSFUL = "The post was updated successfully.";
+    private final static String DELETE_SUCCESSFUL = "The post was deleted successfully";
 
     private final static String CREATE_ERROR = "The user can only create their own post.";
     private final static String UPDATE_ERROR = "The user can only update their own post.";
@@ -70,7 +70,7 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new MessageResponse(CREATE_SUCCESS));
+                .body(new MessageResponse(CREATE_SUCCESSFUL));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService {
         fromDbPost.setUpdatedAt(LocalDateTime.now());
         postRepository.save(fromDbPost);
 
-        return ResponseEntity.ok().body(new MessageResponse(UPDATE_SUCCESS));
+        return ResponseEntity.ok().body(new MessageResponse(UPDATE_SUCCESSFUL));
     }
 
     @Override
@@ -103,7 +103,7 @@ public class PostServiceImpl implements PostService {
                     .body(new MessageResponse(DELETE_ERROR));
         }
 
-        return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESS));
+        return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESSFUL));
     }
 
     @Override
