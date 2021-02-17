@@ -26,8 +26,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<?> handlerPostNotFound(final PostNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("NOT FOUND", List.of(exception.getMessage()));
-        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = new ErrorResponse("Post is not found", List.of(exception.getMessage()));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<?> handlerRoleNotFound(final RoleNotFoundException exception){
+        ErrorResponse errorResponse = new ErrorResponse("Role is not found", List.of(exception.getMessage()));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
     }
 
     @Override
@@ -37,7 +48,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.toList());
         ErrorResponse errorResponse = new ErrorResponse("Validation failed", details);
-        return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+                .badRequest()
+                .body(errorResponse);
     }
 
 }
