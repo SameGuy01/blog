@@ -1,12 +1,12 @@
 package ru.andreev.blog.domain.dto.request;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@Setter
+@Data
 public class LogInRequest {
 
     @NotBlank(message = "Username must be not empty")
