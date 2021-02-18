@@ -12,7 +12,7 @@ public class CommentResponse {
 
     private String content;
 
-    private UserResponse commentator;
+    private UserInfoResponse commentator;
 
     private String postId;
 

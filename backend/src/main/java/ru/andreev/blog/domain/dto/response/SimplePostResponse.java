@@ -15,5 +15,5 @@ public class SimplePostResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
-    private UserResponse user;
+    private UserInfoResponse user;
 }

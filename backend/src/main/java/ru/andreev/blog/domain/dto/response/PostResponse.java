@@ -13,7 +13,7 @@ public class PostResponse {
 
     private String content;
 
-    private UserResponse user;
+    private UserInfoResponse user;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
