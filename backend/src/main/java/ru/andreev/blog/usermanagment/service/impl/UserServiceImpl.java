@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.andreev.blog.domain.dto.request.UserEditRequest;
+import ru.andreev.blog.domain.dto.request.UserInfoEditRequest;
 import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.domain.mapper.UserMapper;
 import ru.andreev.blog.domain.model.entity.Role;
@@ -138,17 +138,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(Long userId, String username, UserEditRequest userEditRequest) {
+    public ResponseEntity<?> updateUser(Long userId, String username, UserInfoEditRequest userInfoEditRequest) {
 
         User userFromDb = userRepository.getById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(userId)));
 
-        if(!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userEditRequest.getId()))){
+        if(!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userInfoEditRequest.getId()))){
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(new MessageResponse(UPDATE_ERROR));
         }
-        User updateUser = userMapper.toDto(userEditRequest);
+        User updateUser = userMapper.toEntity(userInfoEditRequest);
 
         if(!updateUser.getUsername().equals(userFromDb.getUsername())){
             if(userRepository.existsByUsername(updateUser.getUsername())){
@@ -170,6 +170,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userFromDb);
 
         return ResponseEntity.ok().body(new MessageResponse(UPDATE_SUCCESSFUL));
+    }
+
+    @Override
+    public ResponseEntity<?> findById(Long id) {
+        User user = userRepository.getById(id)
+                .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(id)));
+        return ResponseEntity.ok().body(userMapper.toDto(user));
     }
 
     private Role getByRole(ERole erole){

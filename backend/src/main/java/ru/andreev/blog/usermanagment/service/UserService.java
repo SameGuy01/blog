@@ -3,7 +3,7 @@ package ru.andreev.blog.usermanagment.service;
 import org.springframework.http.ResponseEntity;
 import ru.andreev.blog.domain.dto.request.LogInRequest;
 import ru.andreev.blog.domain.dto.request.SignUpRequest;
-import ru.andreev.blog.domain.dto.request.UserEditRequest;
+import ru.andreev.blog.domain.dto.request.UserInfoEditRequest;
 
 public interface UserService {
 
@@ -11,5 +11,7 @@ public interface UserService {
 
     ResponseEntity<?> registerUser(SignUpRequest signUpRequest);
 
-    ResponseEntity<?> updateUser(Long userId, String username, UserEditRequest userEditRequest);
+    ResponseEntity<?> updateUser(Long userId, String username, UserInfoEditRequest userInfoEditRequest);
+
+    ResponseEntity<?> findById(Long id);
 }
