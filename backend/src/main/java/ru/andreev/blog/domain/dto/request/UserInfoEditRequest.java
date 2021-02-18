@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class UserEditRequest {
+public class UserInfoEditRequest {
 
     @NotBlank(message = "Id must be not empty")
     private String id;
