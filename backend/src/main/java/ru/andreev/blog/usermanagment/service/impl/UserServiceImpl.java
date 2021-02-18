@@ -148,8 +148,23 @@ public class UserServiceImpl implements UserService {
                     .status(HttpStatus.FORBIDDEN)
                     .body(new MessageResponse(UPDATE_ERROR));
         }
-
         User updateUser = userMapper.toDto(userEditRequest);
+
+        if(!updateUser.getUsername().equals(userFromDb.getUsername())){
+            if(userRepository.existsByUsername(updateUser.getUsername())){
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse(USERNAME_INVALID));
+            }
+        }
+
+        if(!updateUser.getEmail().equals(userFromDb.getEmail())){
+            if(userRepository.existsByEmail(updateUser.getEmail())){
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse(EMAIL_INVALID));
+            }
+        }
 
         BeanUtils.copyProperties(updateUser,userFromDb, "id", "postList", "password", "registeredAt", "roles", "isActive");
         userRepository.save(userFromDb);
