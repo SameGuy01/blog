@@ -24,6 +24,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> handlerUserNotFound(final UserNotFoundException exception){
+        ErrorResponse errorResponse = new ErrorResponse("Use is not found", List.of(exception.getMessage()));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<?> handlerPostNotFound(final PostNotFoundException exception){
         ErrorResponse errorResponse = new ErrorResponse("Post is not found", List.of(exception.getMessage()));
