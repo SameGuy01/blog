@@ -12,7 +12,7 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(produces = "application/json", path = "/api/v/0/comments")
+@RequestMapping(produces = "application/json", path = "/api/v/0/posts/{postId}/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -23,8 +23,17 @@ public class CommentController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> saveComment(@Valid @RequestBody CommentRequest commentRequest,
-                                         @AuthenticationPrincipal UserDetails userDetails){
-        return commentService.saveComment(commentRequest, userDetails.getUsername());
+    public ResponseEntity<?> saveComment(@PathVariable final Long postId,
+                                         @Valid @RequestBody final CommentRequest commentRequest,
+                                         @AuthenticationPrincipal final UserDetails userDetails){
+        return commentService.saveComment(postId,commentRequest, userDetails.getUsername());
+    }
+
+    @DeleteMapping("/{commentId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteComment(@PathVariable final Long postId,
+                                           @PathVariable final Long commentId,
+                                           @AuthenticationPrincipal final  UserDetails userDetails){
+        return commentService.deleteComment(postId, commentId, userDetails.getUsername());
     }
 }
