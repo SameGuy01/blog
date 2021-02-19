@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<?> saveComment(CommentRequest commentRequest, String username) {
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(UserNotFoundException::new);
 
         Post post = postRepository.findById(Long.valueOf(commentRequest.getPostId()))
                 .orElseThrow(() -> new PostNotFoundException(commentRequest.getPostId()));

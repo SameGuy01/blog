@@ -19,6 +19,7 @@ import ru.andreev.blog.domain.model.entity.Role;
 import ru.andreev.blog.domain.model.entity.User;
 import ru.andreev.blog.domain.model.enums.ERole;
 import ru.andreev.blog.postmanagment.exception.RoleNotFoundException;
+import ru.andreev.blog.postmanagment.exception.UserNotFoundException;
 import ru.andreev.blog.security.jwt.JwtUtils;
 import ru.andreev.blog.security.service.UserDetailsImpl;
 import ru.andreev.blog.domain.dto.request.LogInRequest;
@@ -141,7 +142,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> updateUser(Long userId, String username, UserInfoEditRequest userInfoEditRequest) {
 
         User userFromDb = userRepository.getById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(userId)));
+                .orElseThrow(UserNotFoundException::new);
 
         if(!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userInfoEditRequest.getId()))){
             return ResponseEntity
@@ -175,13 +176,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> findById(Long id) {
         User user = userRepository.getById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(id)));
+                .orElseThrow(UserNotFoundException::new);
         return ResponseEntity.ok().body(userMapper.toDto(user));
     }
 
     private Role getByRole(ERole erole){
         return roleRepository.findByRole(erole)
-                .orElseThrow(() -> new RoleNotFoundException(erole.name()));
+                .orElseThrow(RoleNotFoundException::new);
     }
 
 }

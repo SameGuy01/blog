@@ -122,11 +122,11 @@ public class PostServiceImpl implements PostService {
 
     private Post getPostById(Long id){
         return postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(String.valueOf(id)));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     private User getUserById(Long id){
         return userRepository.getById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(id)));
+                .orElseThrow(UserNotFoundException::new);
     }
 }
