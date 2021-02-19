@@ -22,9 +22,9 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getAllByUser(@PathVariable final Long userId){
-        return postService.getAllByUserId(userId);
+        return postService.findAllByUserId(userId);
     }
 
     @GetMapping("/{postId}")

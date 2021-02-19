@@ -3,7 +3,6 @@ package ru.andreev.blog.postmanagment.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.andreev.blog.domain.dto.request.PostEditRequest;
@@ -14,6 +13,7 @@ import ru.andreev.blog.domain.mapper.PostMapper;
 import ru.andreev.blog.domain.model.entity.Post;
 import ru.andreev.blog.domain.model.entity.User;
 import ru.andreev.blog.postmanagment.exception.PostNotFoundException;
+import ru.andreev.blog.postmanagment.exception.UserNotFoundException;
 import ru.andreev.blog.postmanagment.repository.PostRepository;
 import ru.andreev.blog.postmanagment.service.PostService;
 import ru.andreev.blog.usermanagment.repository.UserRepository;
@@ -30,13 +30,11 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    private final static String CREATE_SUCCESSFUL = "The post was created successfully.";
-    private final static String UPDATE_SUCCESSFUL = "The post was updated successfully.";
-    private final static String DELETE_SUCCESSFUL = "The post was deleted successfully";
+    private final static String CREATE_SUCCESSFUL = "Post was created successfully.";
+    private final static String UPDATE_SUCCESSFUL = "Post was updated successfully.";
+    private final static String DELETE_SUCCESSFUL = "Post was deleted successfully";
 
-    private final static String CREATE_ERROR = "The user can only create their own post.";
-    private final static String UPDATE_ERROR = "The user can only update their own post.";
-    private final static String DELETE_ERROR = "The user can only delete their own post.";
+    private final static String INVALID_USERNAME = "Invalid username id";
 
     public PostServiceImpl(PostMapper postMapper, UserRepository userRepository, PostRepository postRepository) {
         this.postMapper = postMapper;
@@ -45,25 +43,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<?> findById(Long id, Long userId) {
-        getUserById(id);
-        return ResponseEntity.ok().body(postMapper.toDto(getPostById(id)));
+    public ResponseEntity<?> findById(Long postId, Long userId) {
+
+        if(userRepository.getById(userId).isEmpty()){
+           return ResponseEntity.badRequest().body(INVALID_USERNAME);
+        }
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+
+        return ResponseEntity.ok().body(postMapper.toDto(post));
     }
 
     @Override
     public ResponseEntity<?> savePost(Long userId, PostRequest postRequest, String username) {
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        User user = getUserById(userId);
 
-        if(!user.getId().equals(userId)){
+        if(!user.getUsername().equals(username)){
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(new MessageResponse(CREATE_ERROR));
+                    .badRequest()
+                    .body(new MessageResponse(INVALID_USERNAME));
         }
 
         Post post = postMapper.toEntity(postRequest);
-
         post.setUser(user);
         post.setCreatedAt(LocalDateTime.now());
 
@@ -81,8 +84,8 @@ public class PostServiceImpl implements PostService {
 
         if(!user.getUsername().equals(username) || !user.getId().equals(userId)){
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(new MessageResponse(UPDATE_ERROR));
+                    .badRequest()
+                    .body(new MessageResponse(INVALID_USERNAME));
         }
 
         Post updatedPost = postMapper.toEntity(postEditRequest);
@@ -99,18 +102,17 @@ public class PostServiceImpl implements PostService {
         Post post = getPostById(postId);
         if(!post.getUser().getUsername().equals(username)){
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(new MessageResponse(DELETE_ERROR));
+                    .badRequest()
+                    .body(new MessageResponse(INVALID_USERNAME));
         }
 
         return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESSFUL));
     }
 
     @Override
-    public ResponseEntity<?> getAllByUserId(Long userId) {
+    public ResponseEntity<?> findAllByUserId(Long userId) {
 
-        User user = userRepository.getById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException(String.valueOf(userId)));
+        User user = getUserById(userId);
 
         List<PostResponse> postList = postRepository.getAllByUser(user)
                 .stream()
