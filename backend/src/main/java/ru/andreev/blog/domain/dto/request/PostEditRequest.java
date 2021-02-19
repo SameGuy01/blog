@@ -7,15 +7,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class PostEditRequest {
 
-    @NotBlank
-    private String id;
-
-    @NotBlank
+    @NotBlank(message = "Content must be not empty")
     private String content;
 
-    @NotBlank
-    private String categoryId;
-
-    @NotBlank
-    private String userId;
 }

@@ -10,6 +10,4 @@ public class CommentRequest {
     @NotBlank(message = "Content must be not empty ")
     private String content;
 
-    @NotBlank(message = "Post id must be not empty ")
-    private String postId;
 }
