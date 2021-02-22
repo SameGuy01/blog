@@ -35,4 +35,20 @@ public class UserController {
         return userService.updateUser(id, userDetails.getUsername(), userInfoEditRequest);
     }
 
+
+    @PatchMapping("/{userId}/subscribe/{channelId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> subscribe(@PathVariable Long userId,
+                                       @PathVariable Long channelId,
+                                       @AuthenticationPrincipal UserDetails userDetails){
+        return userService.subscribe(userId, channelId, userDetails.getUsername());
+    }
+
+    @PatchMapping("/{userId}/unsubscribe/{channelId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> unsubscribe(@PathVariable Long userId,
+                                         @PathVariable Long channelId,
+                                         @AuthenticationPrincipal UserDetails userDetails){
+        return userService.unsubscribe(userId,channelId,userDetails.getUsername());
+    }
 }
