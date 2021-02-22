@@ -54,11 +54,40 @@ public class User extends AbstractEntity {
     @Column(name = "active")
     private Boolean isActive;
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_subscribers",
+            joinColumns = @JoinColumn(name = "channel_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
+    )
+    private Set<User> subscribers = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = { @JoinColumn(name = "subscriber_id") },
+            inverseJoinColumns = { @JoinColumn(name = "channel_id") }
+    )
+    private Set<User> subscriptions = new HashSet<>();
+
+
     public User(String firstName, String lastName, String username, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public void subscribe(User user){
+        subscriptions.add(user);
+    }
+
+    public void unsubscribe(User user){
+        subscriptions.remove(user);
+    }
+
+    public void addSubscriber(User user){
+        subscribers.add(user);
     }
 }

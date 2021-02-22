@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,14 +47,18 @@ public class UserServiceImpl implements UserService {
 
     private final static String REGISTRATION_SUCCESSFUL = "The user registered successfully.";
     private final static String UPDATE_SUCCESSFUL = "The user was updated successfully.";
+    private final static String SUBSCRIPTION_SUCCESSFUL = "User subscribed successfully";
+    private static final String UNSUBSCRIPTION_SUCCESSFUL = "User unsubscribed successfully.";
 
     private final static String UPDATE_ERROR = "The user can only update their own data.";
+    private final static String USER_BAD_REQUEST = "Invalid user.";
+    private final static String UNSUBSCRIBE_BAD_REQUEST = "User is not subscribed to this channel.";
 
     private final static String USERNAME_INVALID = "The username is already taken.";
     private final static String EMAIL_INVALID = "The email is already taken.";
 
     public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.jwtUtils = jwtUtils;
+            this.jwtUtils = jwtUtils;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
@@ -180,9 +183,51 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok().body(userMapper.toDto(user));
     }
 
+    @Override
+    public ResponseEntity<?> subscribe(Long userId, Long channelId, String username) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if(!user.getUsername().equals(username)){
+            return ResponseEntity.badRequest().body(new MessageResponse(USER_BAD_REQUEST));
+        }
+
+        User channel = userRepository.getById(channelId)
+                .orElseThrow(UserNotFoundException::new);
+
+        user.subscribe(channel);
+        channel.addSubscriber(user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok().body(new MessageResponse(SUBSCRIPTION_SUCCESSFUL));
+    }
+
+    @Override
+    public ResponseEntity<?> unsubscribe(Long userId, Long channelId, String username) {
+        User user = getUserById(userId);
+
+        if(!user.getUsername().equals(username)){
+            return ResponseEntity.badRequest().body(new MessageResponse(USER_BAD_REQUEST));
+        }
+
+        User channel = getUserById(channelId);
+        if(!user.getSubscriptions().contains(channel)){
+            return ResponseEntity.badRequest().body(new MessageResponse(UNSUBSCRIBE_BAD_REQUEST));
+        }
+
+        user.unsubscribe(channel);
+        userRepository.save(user);
+
+        return ResponseEntity.ok().body(UNSUBSCRIPTION_SUCCESSFUL);
+    }
+
     private Role getByRole(ERole erole){
         return roleRepository.findByRole(erole)
                 .orElseThrow(RoleNotFoundException::new);
     }
 
+    private User getUserById(Long id){
+        return userRepository.getById(id)
+                .orElseThrow(UserNotFoundException::new);
+    }
 }

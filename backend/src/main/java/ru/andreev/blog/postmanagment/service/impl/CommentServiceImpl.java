@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentMapper.toEntity(commentRequest);
         comment.setPost(post);
         comment.setCreatedAt(LocalDateTime.now());
-        comment.setCommentator(user);
+        comment.setUser(user);
         commentRepository.save(comment);
 
         return ResponseEntity
@@ -66,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.getById(postId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if(!comment.getCommentator().getUsername().equals(username)){
+        if(!comment.getUser().getUsername().equals(username)){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse(INVALID_USER));
