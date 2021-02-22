@@ -21,7 +21,7 @@ public class Comment extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User commentator;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
