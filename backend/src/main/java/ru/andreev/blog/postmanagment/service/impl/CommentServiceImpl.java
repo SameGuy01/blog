@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.andreev.blog.domain.dto.request.CommentRequest;
+import ru.andreev.blog.domain.dto.response.CommentResponse;
 import ru.andreev.blog.domain.dto.response.MessageResponse;
 import ru.andreev.blog.domain.mapper.CommentMapper;
 import ru.andreev.blog.domain.model.entity.Comment;
@@ -19,6 +20,8 @@ import ru.andreev.blog.postmanagment.service.CommentService;
 import ru.andreev.blog.usermanagment.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
             return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
         }
 
-        Comment comment = commentRepository.getById(postId)
+        Comment comment = commentRepository.getById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
         if(!comment.getUser().getUsername().equals(username)){
@@ -88,6 +91,21 @@ public class CommentServiceImpl implements CommentService {
         return ResponseEntity
                 .ok()
                 .body(new MessageResponse(DELETE_SUCCESSFUL));
+    }
+
+    @Override
+    public ResponseEntity<?> getAllByPostId(Long channelId, Long postId) {
+
+        if(userRepository.getById(channelId).isEmpty()){
+            return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
+        }
+
+        List<CommentResponse> commentList = commentRepository
+                .getAllByPostId(postId)
+                .stream().map(commentMapper::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(commentList);
     }
 
     private Post getById(Long id){

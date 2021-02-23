@@ -21,6 +21,12 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @GetMapping
+    public ResponseEntity<?> findAllComments(@PathVariable Long channelId,
+                                             @PathVariable Long postId){
+        return commentService.getAllByPostId(channelId, postId);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> saveComment(@PathVariable final Long channelId,
