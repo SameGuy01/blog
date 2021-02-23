@@ -34,7 +34,8 @@ public class PostServiceImpl implements PostService {
     private final static String UPDATE_SUCCESSFUL = "Post was updated successfully.";
     private final static String DELETE_SUCCESSFUL = "Post was deleted successfully";
 
-    private final static String INVALID_USERNAME = "Invalid username id";
+    private final static String INVALID_USERNAME = "Invalid username id.";
+    private final static String INVALID_POST_USER = "Post's user is incorrect.";
 
     public PostServiceImpl(PostMapper postMapper, UserRepository userRepository, PostRepository postRepository) {
         this.postMapper = postMapper;
@@ -51,6 +52,10 @@ public class PostServiceImpl implements PostService {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+
+        if(!post.getUser().getId().equals(userId)){
+            return ResponseEntity.badRequest().body(INVALID_USERNAME);
+        }
 
         return ResponseEntity.ok().body(postMapper.toDto(post));
     }
@@ -80,12 +85,17 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> updatePost(Long postId, Long userId, PostEditRequest postEditRequest, String username) {
 
         User user = getUserById(userId);
-        Post fromDbPost = getPostById(postId);
 
-        if(!user.getUsername().equals(username) || !user.getId().equals(userId)){
+        if(!user.getUsername().equals(username)){
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse(INVALID_USERNAME));
+        }
+
+        Post fromDbPost = getPostById(postId);
+
+        if(!user.equals(fromDbPost.getUser())){
+            return ResponseEntity.badRequest().body(INVALID_POST_USER);
         }
 
         Post updatedPost = postMapper.toEntity(postEditRequest);
@@ -103,7 +113,7 @@ public class PostServiceImpl implements PostService {
         if(!post.getUser().getUsername().equals(username)){
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse(INVALID_USERNAME));
+                    .body(new MessageResponse(INVALID_POST_USER));
         }
 
         return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESSFUL));

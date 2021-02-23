@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
     private final static String DELETE_SUCCESSFUL = "Comment was deleted successfully.";
 
     private final static String INVALID_USER = "Invalid user.";
-    private final static String INVALID_POST_USER = "Post's user is incorrect";
+    private final static String INVALID_POST_USER = "Post's user is incorrect.";
 
     public CommentServiceImpl(CommentMapper commentMapper, UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository) {
         this.commentMapper = commentMapper;
