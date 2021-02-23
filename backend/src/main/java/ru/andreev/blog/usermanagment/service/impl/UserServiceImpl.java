@@ -216,6 +216,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.unsubscribe(channel);
+        channel.removeSubscriber(user);
         userRepository.save(user);
 
         return ResponseEntity.ok().body(UNSUBSCRIPTION_SUCCESSFUL);

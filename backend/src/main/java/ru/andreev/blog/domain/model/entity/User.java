@@ -90,4 +90,6 @@ public class User extends AbstractEntity {
     public void addSubscriber(User user){
         subscribers.add(user);
     }
+
+    public void removeSubscriber(User user) {subscribers.remove(user);}
 }
