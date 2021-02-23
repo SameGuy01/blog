@@ -5,7 +5,7 @@ import ru.andreev.blog.domain.dto.request.CommentRequest;
 
 public interface CommentService {
 
-    ResponseEntity<?> saveComment(Long postId, CommentRequest commentRequest, String username);
+    ResponseEntity<?> saveComment(Long channelId, Long postId, CommentRequest commentRequest, String username);
 
-    ResponseEntity<?> deleteComment(Long postId, Long commentId, String username);
+    ResponseEntity<?> deleteComment(Long channelId, Long postId, Long commentId, String username);
 }

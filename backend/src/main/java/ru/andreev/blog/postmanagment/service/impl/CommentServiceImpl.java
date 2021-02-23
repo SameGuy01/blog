@@ -29,9 +29,11 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
+    private final static String CREATE_SUCCESSFUL = "Comment was created successfully";
     private final static String DELETE_SUCCESSFUL = "Comment was deleted successfully.";
 
     private final static String INVALID_USER = "Invalid user.";
+    private final static String INVALID_POST_USER = "Post's user is incorrect";
 
     public CommentServiceImpl(CommentMapper commentMapper, UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository) {
         this.commentMapper = commentMapper;
@@ -41,27 +43,36 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> saveComment(Long postId, CommentRequest commentRequest, String username) {
+    public ResponseEntity<?> saveComment(Long channelId, Long postId, CommentRequest commentRequest, String username) {
 
-        User user = userRepository.findByUsername(username)
+        User commentator = userRepository.findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
-        Post post = postRepository.findById(postId).
-                orElseThrow(PostNotFoundException::new);
+        Post post = getById(postId);
+
+        if (!post.getUser().getId().equals(channelId)){
+            return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
+        }
 
         Comment comment = commentMapper.toEntity(commentRequest);
         comment.setPost(post);
         comment.setCreatedAt(LocalDateTime.now());
-        comment.setUser(user);
+        comment.setUser(commentator);
         commentRepository.save(comment);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(commentMapper.toDto(comment));
+                .body(new MessageResponse(CREATE_SUCCESSFUL));
     }
 
     @Override
-    public ResponseEntity<?> deleteComment(Long postId, Long commentId, String username) {
+    public ResponseEntity<?> deleteComment(Long channelId, Long postId, Long commentId, String username) {
+
+        Post post = getById(postId);
+
+        if(!post.getUser().getId().equals(channelId)){
+            return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
+        }
 
         Comment comment = commentRepository.getById(postId)
                 .orElseThrow(CommentNotFoundException::new);
@@ -77,5 +88,10 @@ public class CommentServiceImpl implements CommentService {
         return ResponseEntity
                 .ok()
                 .body(new MessageResponse(DELETE_SUCCESSFUL));
+    }
+
+    private Post getById(Long id){
+        return postRepository.findById(id)
+                .orElseThrow(PostNotFoundException::new);
     }
 }

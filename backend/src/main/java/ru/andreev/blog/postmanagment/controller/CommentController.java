@@ -12,7 +12,7 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(produces = "application/json", path = "/api/v/0/posts/{postId}/comments")
+@RequestMapping(produces = "application/json", path = "/api/v/0/users/{channelId}/posts/{postId}/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -23,17 +23,19 @@ public class CommentController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> saveComment(@PathVariable final Long postId,
+    public ResponseEntity<?> saveComment(@PathVariable final Long channelId,
+                                         @PathVariable final Long postId,
                                          @Valid @RequestBody final CommentRequest commentRequest,
                                          @AuthenticationPrincipal final UserDetails userDetails){
-        return commentService.saveComment(postId,commentRequest, userDetails.getUsername());
+        return commentService.saveComment(channelId,postId,commentRequest, userDetails.getUsername());
     }
 
     @DeleteMapping("/{commentId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> deleteComment(@PathVariable final Long postId,
+    public ResponseEntity<?> deleteComment(@PathVariable final Long channelId,
+                                           @PathVariable final Long postId,
                                            @PathVariable final Long commentId,
                                            @AuthenticationPrincipal final  UserDetails userDetails){
-        return commentService.deleteComment(postId, commentId, userDetails.getUsername());
+        return commentService.deleteComment(channelId,postId, commentId, userDetails.getUsername());
     }
 }
