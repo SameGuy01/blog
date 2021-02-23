@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<?> saveComment(Long channelId, Long postId, CommentRequest commentRequest, String username) {
 
-        User commentator = userRepository.findByUsername(username)
+        User commentator = userRepository.getByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
         Post post = getById(postId);

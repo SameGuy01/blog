@@ -14,7 +14,7 @@ public interface UserService {
 
     ResponseEntity<?> updateUser(Long userId, String username, UserInfoEditRequest userInfoEditRequest);
 
-    ResponseEntity<?> findById(Long id);
+    ResponseEntity<?> getById(Long id);
 
     ResponseEntity<?> subscribe(Long userId, Long channelId, String username);
 

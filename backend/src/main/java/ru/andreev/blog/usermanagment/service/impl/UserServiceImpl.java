@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> findById(Long id) {
+    public ResponseEntity<?> getById(Long id) {
         User user = userRepository.getById(id)
                 .orElseThrow(UserNotFoundException::new);
         return ResponseEntity.ok().body(userMapper.toDto(user));
@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Role getByRole(ERole erole){
-        return roleRepository.findByRole(erole)
+        return roleRepository.getByRole(erole)
                 .orElseThrow(RoleNotFoundException::new);
     }
 
