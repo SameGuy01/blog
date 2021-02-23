@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -34,4 +35,16 @@ public class Post extends AbstractEntity {
     @OrderBy("createdAt")
     private List<Comment> commentList;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return Objects.equals(content, post.content) && Objects.equals(user, post.user) && Objects.equals(createdAt, post.createdAt) && Objects.equals(updatedAt, post.updatedAt) && Objects.equals(commentList, post.commentList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(content, user, createdAt, updatedAt, commentList);
+    }
 }

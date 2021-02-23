@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -30,4 +31,16 @@ public class Comment extends AbstractEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(content, comment.content) && Objects.equals(user, comment.user) && Objects.equals(post, comment.post) && Objects.equals(createdAt, comment.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(content, user, post, createdAt);
+    }
 }

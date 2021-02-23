@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -92,4 +93,17 @@ public class User extends AbstractEntity {
     }
 
     public void removeSubscriber(User user) {subscribers.remove(user);}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(registeredAt, user.registeredAt) && Objects.equals(postList, user.postList) && Objects.equals(about, user.about) && Objects.equals(roles, user.roles) && Objects.equals(isActive, user.isActive) && Objects.equals(subscribers, user.subscribers) && Objects.equals(subscriptions, user.subscriptions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, username, email, password, registeredAt, postList, about, roles, isActive, subscribers, subscriptions);
+    }
 }
