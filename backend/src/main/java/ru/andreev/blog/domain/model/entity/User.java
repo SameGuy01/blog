@@ -1,6 +1,8 @@
 package ru.andreev.blog.domain.model.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -98,12 +100,13 @@ public class User extends AbstractEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         User user = (User) o;
-        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(registeredAt, user.registeredAt) && Objects.equals(postList, user.postList) && Objects.equals(about, user.about) && Objects.equals(roles, user.roles) && Objects.equals(isActive, user.isActive) && Objects.equals(subscribers, user.subscribers) && Objects.equals(subscriptions, user.subscriptions);
+        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, username, email, password, registeredAt, postList, about, roles, isActive, subscribers, subscriptions);
+        return Objects.hash(super.hashCode(), firstName, lastName, username, email, password);
     }
 }

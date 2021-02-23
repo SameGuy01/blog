@@ -1,11 +1,9 @@
 package ru.andreev.blog.domain.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -20,4 +18,16 @@ public class AbstractEntity {
             generator = "abstract_entity_generator")
     private Long id;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractEntity that = (AbstractEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

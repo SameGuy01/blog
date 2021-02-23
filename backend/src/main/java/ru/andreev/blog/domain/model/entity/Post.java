@@ -39,12 +39,13 @@ public class Post extends AbstractEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Post post = (Post) o;
-        return Objects.equals(content, post.content) && Objects.equals(user, post.user) && Objects.equals(createdAt, post.createdAt) && Objects.equals(updatedAt, post.updatedAt) && Objects.equals(commentList, post.commentList);
+        return Objects.equals(content, post.content) && Objects.equals(user, post.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(content, user, createdAt, updatedAt, commentList);
+        return Objects.hash(super.hashCode(), content, user);
     }
 }
