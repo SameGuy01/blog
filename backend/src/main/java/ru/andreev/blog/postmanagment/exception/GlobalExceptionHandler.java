@@ -26,7 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity<?> handlerCommentNotFount(final CommentNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("Role is not found", List.of(exception.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("Role is not found");
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
@@ -34,8 +34,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handlerUserNotFound(final UserNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("User is not found", List.of(exception.getMessage()));
+    public ResponseEntity<?> handlerUserNotFound(){
+        ErrorResponse errorResponse = new ErrorResponse("User is not found");
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<?> handlerPostNotFound(final PostNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("Post is not found", List.of(exception.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("Post is not found");
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(RoleNotFoundException.class)
     public ResponseEntity<?> handlerRoleNotFound(final RoleNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("Role is not found", List.of(exception.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("Role is not found");
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
