@@ -2,6 +2,8 @@ package ru.andreev.blog.domain.dto.response;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class UserInfoResponse {
 
@@ -17,4 +19,7 @@ public class UserInfoResponse {
 
     private String about;
 
+    private List<SimpleUserInfoResponse> subscribers;
+
+    private List<SimpleUserInfoResponse> subscriptions;
 }
