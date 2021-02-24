@@ -16,6 +16,8 @@ public class CommentResponse {
 
     private String postId;
 
+    private CommentResponse child;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 }

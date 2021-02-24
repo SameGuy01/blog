@@ -46,16 +46,43 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> saveComment(Long channelId, Long postId, CommentRequest commentRequest, String username) {
+    public ResponseEntity<?> replyComment(Long channelId, Long postId, Long commentId, CommentRequest replyCommentRequest, String username) {
+
+        Post post = getById(postId);
+
+        if(!post.getUser().getId().equals(channelId)){
+            return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
+        }
+
+        Comment comment = commentRepository.getById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
 
         User commentator = userRepository.getByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
+
+        Comment replyComment = commentMapper.toEntity(replyCommentRequest);
+        replyComment.setPost(post);
+        replyComment.setCreatedAt(LocalDateTime.now());
+        replyComment.setUser(commentator);
+
+        comment.setChild(replyComment);
+
+        commentRepository.save(replyComment);
+
+        return ResponseEntity.ok(CREATE_SUCCESSFUL);
+    }
+
+    @Override
+    public ResponseEntity<?> saveComment(Long channelId, Long postId, CommentRequest commentRequest, String username) {
 
         Post post = getById(postId);
 
         if (!post.getUser().getId().equals(channelId)){
             return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
         }
+
+        User commentator = userRepository.getByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
 
         Comment comment = commentMapper.toEntity(commentRequest);
         comment.setPost(post);

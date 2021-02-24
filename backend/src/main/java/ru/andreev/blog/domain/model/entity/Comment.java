@@ -31,6 +31,10 @@ public class Comment extends AbstractEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @OneToOne (cascade = CascadeType.MERGE)
+    @JoinColumn(name = "child_comment_id")
+    private Comment child;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
