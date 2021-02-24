@@ -23,8 +23,13 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllByUser(@PathVariable final Long userId){
+    public ResponseEntity<?> getAllPostByUser(@PathVariable final Long userId){
         return postService.findAllByUserId(userId);
+    }
+
+    @GetMapping("/subscriptions")
+    public ResponseEntity<?> getAllPostBySubscriptions(@PathVariable Long userId){
+        return postService.findAllBySubscriptions(userId);
     }
 
     @GetMapping("/{postId}")

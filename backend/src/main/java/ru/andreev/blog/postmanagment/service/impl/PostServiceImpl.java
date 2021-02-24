@@ -132,6 +132,21 @@ public class PostServiceImpl implements PostService {
         return ResponseEntity.ok(postList);
     }
 
+    @Override
+    public ResponseEntity<?> findAllBySubscriptions(Long userId) {
+
+        if(userRepository.getById(userId).isEmpty()){
+            throw new UserNotFoundException();
+        }
+
+        List<PostResponse> postList = postRepository.getAllBySubscription(userId)
+                .stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(postList);
+    }
+
     private Post getPostById(Long id){
         return postRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);

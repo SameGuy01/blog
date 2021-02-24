@@ -15,4 +15,6 @@ public interface PostService {
     ResponseEntity<?> deleteById(Long postId, Long userId, String username);
 
     ResponseEntity<?> findAllByUserId(Long userId);
+
+    ResponseEntity<?> findAllBySubscriptions(Long userId);
 }
