@@ -133,10 +133,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<?> findAllBySubscriptions(Long userId) {
+    public ResponseEntity<?> findAllBySubscription(Long userId, String username) {
 
-        if(userRepository.getById(userId).isEmpty()){
-            throw new UserNotFoundException();
+        User user = getUserById(userId);
+
+        if(!user.getUsername().equals(username)){
+            return ResponseEntity.badRequest().body(INVALID_POST_USER);
         }
 
         List<PostResponse> postList = postRepository.getAllBySubscription(userId)

@@ -28,8 +28,10 @@ public class PostController {
     }
 
     @GetMapping("/subscriptions")
-    public ResponseEntity<?> getAllPostBySubscriptions(@PathVariable Long userId){
-        return postService.findAllBySubscriptions(userId);
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getAllPostBySubscriptions(@PathVariable Long userId,
+                                                       @AuthenticationPrincipal UserDetails userDetails){
+        return postService.findAllBySubscription(userId, userDetails.getUsername());
     }
 
     @GetMapping("/{postId}")

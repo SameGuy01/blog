@@ -16,5 +16,5 @@ public interface PostService {
 
     ResponseEntity<?> findAllByUserId(Long userId);
 
-    ResponseEntity<?> findAllBySubscriptions(Long userId);
+    ResponseEntity<?> findAllBySubscription(Long userId, String username);
 }
