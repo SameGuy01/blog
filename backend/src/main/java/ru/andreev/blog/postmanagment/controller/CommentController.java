@@ -36,16 +36,6 @@ public class CommentController {
         return commentService.saveComment(channelId,postId,commentRequest, userDetails.getUsername());
     }
 
-    @PostMapping("/{commentId}/reply")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> replyComment(@PathVariable final Long channelId,
-                                          @PathVariable final Long postId,
-                                          @PathVariable final Long commentId,
-                                          @Valid @RequestBody final CommentRequest replyCommentRequest,
-                                          @AuthenticationPrincipal final UserDetails userDetails){
-        return commentService.replyComment(channelId, postId, commentId, replyCommentRequest, userDetails.getUsername());
-    }
-
     @DeleteMapping("/{commentId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteComment(@PathVariable final Long channelId,
