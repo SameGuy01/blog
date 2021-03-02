@@ -35,6 +35,9 @@ public class Post extends AbstractEntity {
     @OrderBy("createdAt")
     private List<Comment> commentList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    private List<Image> imageList;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
