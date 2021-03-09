@@ -116,6 +116,8 @@ public class PostServiceImpl implements PostService {
                     .body(new MessageResponse(INVALID_POST_USER));
         }
 
+        postRepository.delete(post);
+
         return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESSFUL));
     }
 
@@ -128,7 +130,6 @@ public class PostServiceImpl implements PostService {
                 .stream()
                 .map(postMapper::toDto)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(postList);
     }
 
