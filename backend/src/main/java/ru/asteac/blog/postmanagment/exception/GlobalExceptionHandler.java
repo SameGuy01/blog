@@ -21,12 +21,16 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private final static String ROLE_NOT_FOUND = "Role is not found";
+    private final static String USER_NOT_FOUND = "User is not found";
+    private final static String POST_NOT_FOUND = "Post is not found";
+
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CommentNotFoundException.class)
-    public ResponseEntity<?> handlerCommentNotFount(final CommentNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("Role is not found");
+    public ResponseEntity<?> handlerCommentNotFount(){
+        ErrorResponse errorResponse = new ErrorResponse(ROLE_NOT_FOUND);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
@@ -35,7 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> handlerUserNotFound(){
-        ErrorResponse errorResponse = new ErrorResponse("User is not found");
+        ErrorResponse errorResponse = new ErrorResponse(USER_NOT_FOUND);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
@@ -43,8 +47,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<?> handlerPostNotFound(final PostNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("Post is not found");
+    public ResponseEntity<?> handlerPostNotFound(){
+        ErrorResponse errorResponse = new ErrorResponse(POST_NOT_FOUND);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
@@ -52,8 +56,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(RoleNotFoundException.class)
-    public ResponseEntity<?> handlerRoleNotFound(final RoleNotFoundException exception){
-        ErrorResponse errorResponse = new ErrorResponse("Role is not found");
+    public ResponseEntity<?> handlerRoleNotFound(){
+        ErrorResponse errorResponse = new ErrorResponse(ROLE_NOT_FOUND);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);

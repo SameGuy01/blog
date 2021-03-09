@@ -36,7 +36,7 @@ public class Post extends AbstractEntity {
     private List<Comment> commentList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-    private List<Image> imageList;
+    private List<File> fileList;
 
     @Override
     public boolean equals(Object o) {

@@ -11,13 +11,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "files")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Image extends AbstractEntity {
+public class File extends AbstractEntity {
 
-    @Column(name = "iamge_path", nullable = false)
-    private String path;
+    @Column(name = "file_path", nullable = false)
+    private String filepath;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -28,12 +28,12 @@ public class Image extends AbstractEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        Image image = (Image) o;
-        return Objects.equals(path, image.path);
+        File file = (File) o;
+        return Objects.equals(filepath, file.filepath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), path);
+        return Objects.hash(super.hashCode(), filepath);
     }
 }
