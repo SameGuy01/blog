@@ -7,8 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -37,6 +36,22 @@ public class Post extends AbstractEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     private List<File> fileList;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> likeUsers = new LinkedHashSet<>();
+
+    public void like(User user){
+        likeUsers.add(user);
+    }
+
+    public void removeLike(User user){
+        likeUsers.remove(user);
+    }
 
     @Override
     public boolean equals(Object o) {

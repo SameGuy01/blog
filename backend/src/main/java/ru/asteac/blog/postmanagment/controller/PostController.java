@@ -64,4 +64,20 @@ public class PostController {
                                         @AuthenticationPrincipal final UserDetails userDetails){
         return postService.deleteById(postId, userId, userDetails.getUsername());
     }
+
+    @PatchMapping("/{postId}/like")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> likePost(@PathVariable final Long postId,
+                                      @PathVariable final Long userId,
+                                      @AuthenticationPrincipal final UserDetails userDetails){
+        return postService.like(postId, userId,userDetails.getUsername());
+    }
+
+    @DeleteMapping("/{postId}/like")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> removeLike(@PathVariable final Long postId,
+                                      @PathVariable final Long userId,
+                                      @AuthenticationPrincipal final UserDetails userDetails){
+        return postService.removeLike(postId, userId,userDetails.getUsername());
+    }
 }
