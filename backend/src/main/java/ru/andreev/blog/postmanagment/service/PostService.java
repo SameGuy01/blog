@@ -1,6 +1,7 @@
 package ru.andreev.blog.postmanagment.service;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import ru.andreev.blog.domain.dto.request.PostEditRequest;
 import ru.andreev.blog.domain.dto.request.PostRequest;
 
@@ -17,4 +18,8 @@ public interface PostService {
     ResponseEntity<?> findAllByUserId(Long userId);
 
     ResponseEntity<?> findAllBySubscription(Long userId, String username);
+
+    ResponseEntity<?> like(Long postId,Long userId, String username);
+
+    ResponseEntity<?> removeLike(Long postId,Long userId, String username);
 }

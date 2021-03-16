@@ -33,8 +33,11 @@ public class PostServiceImpl implements PostService {
     private final static String CREATE_SUCCESSFUL = "Post was created successfully.";
     private final static String UPDATE_SUCCESSFUL = "Post was updated successfully.";
     private final static String DELETE_SUCCESSFUL = "Post was deleted successfully";
+    private final static String LIKE_SUCCESSFUL = "Like was added successfully";
+    private final static String REMOVE_LIKE_SUCCESSFUL = "Like was removed successfully";
 
-    private final static String INVALID_USERNAME = "Invalid username id.";
+
+    private final static String INVALID_USER = "Invalid user id.";
     private final static String INVALID_POST_USER = "Post's user is incorrect.";
 
     public PostServiceImpl(PostMapper postMapper, UserRepository userRepository, PostRepository postRepository) {
@@ -47,14 +50,14 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<?> findById(Long postId, Long userId) {
 
         if(userRepository.getById(userId).isEmpty()){
-           return ResponseEntity.badRequest().body(INVALID_USERNAME);
+           return ResponseEntity.badRequest().body(INVALID_USER);
         }
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
         if(!post.getUser().getId().equals(userId)){
-            return ResponseEntity.badRequest().body(INVALID_USERNAME);
+            return ResponseEntity.badRequest().body(INVALID_USER);
         }
 
         return ResponseEntity.ok().body(postMapper.toDto(post));
@@ -68,7 +71,7 @@ public class PostServiceImpl implements PostService {
         if(!user.getUsername().equals(username)){
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse(INVALID_USERNAME));
+                    .body(new MessageResponse(INVALID_USER));
         }
 
         Post post = postMapper.toEntity(postRequest);
@@ -89,7 +92,7 @@ public class PostServiceImpl implements PostService {
         if(!user.getUsername().equals(username)){
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse(INVALID_USERNAME));
+                    .body(new MessageResponse(INVALID_USER));
         }
 
         Post fromDbPost = getPostById(postId);
@@ -115,6 +118,8 @@ public class PostServiceImpl implements PostService {
                     .badRequest()
                     .body(new MessageResponse(INVALID_POST_USER));
         }
+
+        postRepository.delete(post);
 
         return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESSFUL));
     }
@@ -148,6 +153,43 @@ public class PostServiceImpl implements PostService {
 
         return ResponseEntity.ok().body(postList);
     }
+
+    @Override
+    public ResponseEntity<?> like(Long postId, Long userId, String username) {
+
+        User author = getUserById(userId);
+        Post post = getPostById(postId);
+
+        if(!post.getUser().equals(author)){
+            return ResponseEntity.badRequest().body(INVALID_USER);
+        }
+
+        User user = userRepository.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        post.like(user);
+        postRepository.save(post);
+
+        return ResponseEntity.ok().body(new MessageResponse(LIKE_SUCCESSFUL));
+    }
+
+    @Override
+    public ResponseEntity<?> removeLike(Long postId, Long userId, String username){
+
+        User author = getUserById(userId);
+        Post post = getPostById(postId);
+
+        if(!post.getUser().equals(author)){
+            return ResponseEntity.badRequest().body(INVALID_USER);
+        }
+
+        User user = userRepository.getByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        post.removeLike(user);
+        postRepository.save(post);
+
+        return ResponseEntity.ok().body(new MessageResponse(REMOVE_LIKE_SUCCESSFUL));
+    }
+
 
     private Post getPostById(Long id){
         return postRepository.findById(id)
