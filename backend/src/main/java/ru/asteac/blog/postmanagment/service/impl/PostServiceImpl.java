@@ -9,6 +9,7 @@ import ru.asteac.blog.domain.dto.request.PostEditRequest;
 import ru.asteac.blog.domain.dto.request.PostRequest;
 import ru.asteac.blog.domain.dto.response.MessageResponse;
 import ru.asteac.blog.domain.dto.response.PostResponse;
+import ru.asteac.blog.domain.dto.response.SimplePostResponse;
 import ru.asteac.blog.domain.mapper.PostMapper;
 import ru.asteac.blog.domain.model.entity.Post;
 import ru.asteac.blog.domain.model.entity.User;
@@ -173,12 +174,12 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public ResponseEntity<?> like(Long userId, Long postId, String username) {
+    public ResponseEntity<?> like(Long postId, Long userId, String username) {
         Post post = getPostById(postId);
 
         User author = getUserById(userId);
 
-        if(!author.getUsername().equals(username)){
+        if(!post.getUser().equals(author)){
             return ResponseEntity.badRequest().body(INVALID_POST_USER);
         }
 

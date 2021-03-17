@@ -2,6 +2,7 @@ package ru.asteac.blog.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import ru.asteac.blog.domain.model.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,4 +20,6 @@ public class PostResponse {
     private LocalDateTime createdAt;
 
     private List<CommentResponse> commentList;
+
+    private List<SimpleUserInfoResponse> likeUsers;
 }
