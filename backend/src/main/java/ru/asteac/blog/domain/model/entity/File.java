@@ -1,4 +1,4 @@
-package ru.asteac.blog.domain.model.entity;
+package ru.andreev.blog.domain.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,13 +11,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "files")
+@Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class File extends AbstractEntity {
+public class Image extends AbstractEntity {
 
-    @Column(name = "file_path", nullable = false)
-    private String filepath;
+    @Column(name = "iamge_path", nullable = false)
+    private String path;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
@@ -28,12 +28,12 @@ public class File extends AbstractEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        File file = (File) o;
-        return Objects.equals(filepath, file.filepath);
+        Image image = (Image) o;
+        return Objects.equals(path, image.path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), filepath);
+        return Objects.hash(super.hashCode(), path);
     }
 }
