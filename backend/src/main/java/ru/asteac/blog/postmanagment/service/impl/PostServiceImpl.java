@@ -154,24 +154,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<?> like(Long postId, Long userId, String username) {
-
-        User author = getUserById(userId);
-        Post post = getPostById(postId);
-
-        if(!post.getUser().equals(author)){
-            return ResponseEntity.badRequest().body(INVALID_USER);
-        }
-
-        User user = userRepository.getByUsername(username).orElseThrow(UserNotFoundException::new);
-
-        post.like(user);
-        postRepository.save(post);
-
-        return ResponseEntity.ok().body(new MessageResponse(LIKE_SUCCESSFUL));
-    }
-
-    @Override
     public ResponseEntity<?> removeLike(Long postId, Long userId, String username){
 
         User author = getUserById(userId);
@@ -189,6 +171,25 @@ public class PostServiceImpl implements PostService {
         return ResponseEntity.ok().body(new MessageResponse(REMOVE_LIKE_SUCCESSFUL));
     }
 
+
+    @Override
+    public ResponseEntity<?> like(Long userId, Long postId, String username) {
+        Post post = getPostById(postId);
+
+        User author = getUserById(userId);
+
+        if(!author.getUsername().equals(username)){
+            return ResponseEntity.badRequest().body(INVALID_POST_USER);
+        }
+
+        User user = userRepository.getByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        post.like(user);
+        postRepository.save(post);
+
+        return ResponseEntity.ok().body(LIKE_SUCCESSFUL);
+    }
 
     private Post getPostById(Long id){
         return postRepository.findById(id)
