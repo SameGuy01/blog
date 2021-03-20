@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.asteac.blog.domain.dto.request.PostEditRequest;
 import ru.asteac.blog.domain.dto.request.PostRequest;
 import ru.asteac.blog.domain.dto.response.MessageResponse;
-import ru.asteac.blog.domain.dto.response.PostResponse;
 import ru.asteac.blog.domain.dto.response.SimplePostResponse;
 import ru.asteac.blog.domain.mapper.PostMapper;
 import ru.asteac.blog.domain.model.entity.Post;
@@ -130,9 +129,9 @@ public class PostServiceImpl implements PostService {
 
         User user = getUserById(userId);
 
-        List<PostResponse> postList = postRepository.getAllByUser(user)
+        List<SimplePostResponse> postList = postRepository.getAllByUser(user)
                 .stream()
-                .map(postMapper::toDto)
+                .map(postMapper::toSimpleDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(postList);
     }
@@ -146,9 +145,9 @@ public class PostServiceImpl implements PostService {
             return ResponseEntity.badRequest().body(INVALID_POST_USER);
         }
 
-        List<PostResponse> postList = postRepository.getAllBySubscription(userId)
+        List<SimplePostResponse> postList = postRepository.getAllBySubscription(userId)
                 .stream()
-                .map(postMapper::toDto)
+                .map(postMapper::toSimpleDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(postList);
