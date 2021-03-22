@@ -20,7 +20,7 @@ public class File extends AbstractEntity {
     private String filepath;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @Override
