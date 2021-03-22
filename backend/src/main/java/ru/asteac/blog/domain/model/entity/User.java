@@ -38,7 +38,7 @@ public class User extends AbstractEntity {
     @Column(name = "registered_at", nullable = false)
     private LocalDateTime registeredAt;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Post> postList;
 
     @Column(name = "about")
