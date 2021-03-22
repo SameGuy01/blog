@@ -1,4 +1,4 @@
-package ru.asteac.blog.postmanagment.exception;
+package ru.asteac.blog.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

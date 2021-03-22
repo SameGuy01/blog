@@ -1,4 +1,4 @@
-package ru.asteac.blog.postmanagment.exception;
+package ru.asteac.blog.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
