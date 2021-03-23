@@ -18,6 +18,9 @@ public class AbstractEntity {
             generator = "abstract_entity_generator")
     private Long id;
 
+    @Column(name = "delete_flag", nullable = false)
+    private boolean deleteFlag;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
