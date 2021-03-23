@@ -77,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
             return ResponseEntity.badRequest().body(new MessageResponse(INVALID_POST_USER));
         }
 
-        Comment comment = commentRepository.getById(commentId)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
         if(!comment.getUser().getUsername().equals(username)){

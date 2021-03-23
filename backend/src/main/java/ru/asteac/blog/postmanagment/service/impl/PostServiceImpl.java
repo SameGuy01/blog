@@ -119,7 +119,7 @@ public class PostServiceImpl implements PostService {
                     .body(new MessageResponse(INVALID_POST_USER));
         }
 
-        postRepository.delete(post);
+        postRepository.softDelete(post.getId());
 
         return ResponseEntity.ok().body(new MessageResponse(DELETE_SUCCESSFUL));
     }

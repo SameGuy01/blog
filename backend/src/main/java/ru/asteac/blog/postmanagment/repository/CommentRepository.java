@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-
-    Optional<Comment> getById(Long id);
+public interface CommentRepository extends GenericJpaRepository<Comment> {
 
     List<Comment> getAllByPostId(Long postId);
 }
