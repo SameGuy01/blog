@@ -1,6 +1,7 @@
 package ru.asteac.blog.usermanagment.service.impl;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,9 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.asteac.blog.domain.dto.request.PasswordChangeRequest;
 import ru.asteac.blog.domain.dto.request.UserInfoEditRequest;
 import ru.asteac.blog.domain.dto.response.MessageResponse;
 import ru.asteac.blog.domain.mapper.UserMapper;
@@ -38,11 +41,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     private final static String REGISTRATION_SUCCESSFUL = "The user registered successfully.";
@@ -57,8 +60,13 @@ public class UserServiceImpl implements UserService {
     private final static String USERNAME_INVALID = "The username is already taken.";
     private final static String EMAIL_INVALID = "The email is already taken.";
 
-    public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-            this.jwtUtils = jwtUtils;
+    private final static String PASSWORD_CHANGE_SUCCESSFUL = "The user password was updated successfully.";
+    private final static String PASSWORD_NEW_MATCH_INVALID = "New passwords doesn't match";
+    private final static String PASSWORD_OLD_EQUALS_INVALID = "Wrong old password";
+    private final static String PASSWORD_PREVIOUS_EQUALS_INVALID = "New password can't be equal to old one";
+
+    public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.jwtUtils = jwtUtils;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
@@ -147,34 +155,68 @@ public class UserServiceImpl implements UserService {
         User userFromDb = userRepository.getById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        if(!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userInfoEditRequest.getId()))){
+        if (!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userInfoEditRequest.getId()))) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(new MessageResponse(UPDATE_ERROR));
         }
         User updateUser = userMapper.toEntity(userInfoEditRequest);
 
-        if(!updateUser.getUsername().equals(userFromDb.getUsername())){
-            if(userRepository.existsByUsername(updateUser.getUsername())){
+        if (!updateUser.getUsername().equals(userFromDb.getUsername())) {
+            if (userRepository.existsByUsername(updateUser.getUsername())) {
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse(USERNAME_INVALID));
             }
         }
 
-        if(!updateUser.getEmail().equals(userFromDb.getEmail())){
-            if(userRepository.existsByEmail(updateUser.getEmail())){
+        if (!updateUser.getEmail().equals(userFromDb.getEmail())) {
+            if (userRepository.existsByEmail(updateUser.getEmail())) {
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse(EMAIL_INVALID));
             }
         }
 
-        BeanUtils.copyProperties(updateUser,userFromDb, "id", "postList", "password", "registeredAt", "roles", "isActive");
+        BeanUtils.copyProperties(updateUser, userFromDb, "id", "postList", "password", "registeredAt", "roles", "isActive");
         userRepository.save(userFromDb);
 
         return ResponseEntity.ok().body(new MessageResponse(UPDATE_SUCCESSFUL));
     }
+
+    @Override
+    public ResponseEntity<?> passwordChange(Long userId, String username, PasswordChangeRequest passwordChangeRequest) {
+        User userFromDb = userRepository.getById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!passwordEncoder.matches(passwordChangeRequest.getOldPassword(), userFromDb.getPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(PASSWORD_OLD_EQUALS_INVALID));
+
+        } else if (!passwordChangeRequest.getNewPassword()
+                .equals(passwordChangeRequest.getMatchingPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(PASSWORD_NEW_MATCH_INVALID));
+
+        } else if (passwordEncoder.matches(passwordChangeRequest.getNewPassword(), userFromDb.getPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(PASSWORD_PREVIOUS_EQUALS_INVALID));
+
+        } else {
+            userFromDb.setPassword(passwordEncoder
+                    .encode(passwordChangeRequest.getNewPassword()));
+            userRepository.save(userFromDb);
+
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse(PASSWORD_CHANGE_SUCCESSFUL));
+        }
+    }
+
+
 
     @Override
     public ResponseEntity<?> getById(Long id) {
@@ -219,7 +261,7 @@ public class UserServiceImpl implements UserService {
         channel.removeSubscriber(user);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body(UNSUBSCRIPTION_SUCCESSFUL);
+        return ResponseEntity.ok().body(new MessageResponse(UNSUBSCRIPTION_SUCCESSFUL));
     }
 
     private Role getByRole(ERole erole){

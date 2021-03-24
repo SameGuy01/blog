@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import ru.asteac.blog.domain.dto.request.PasswordChangeRequest;
 import ru.asteac.blog.domain.dto.request.UserInfoEditRequest;
 import ru.asteac.blog.usermanagment.service.UserService;
 
@@ -33,6 +34,14 @@ public class UserController {
                                         @Valid @RequestBody UserInfoEditRequest userInfoEditRequest,
                                         @AuthenticationPrincipal UserDetails userDetails) {
         return userService.updateUser(id, userDetails.getUsername(), userInfoEditRequest);
+    }
+
+    @PatchMapping("/{id}/password-change")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> changeUserPassword(@PathVariable Long id,
+                                        @Valid @RequestBody PasswordChangeRequest passwordChangeRequest,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
+        return userService.passwordChange(id, userDetails.getUsername(), passwordChangeRequest);
     }
 
 

@@ -2,6 +2,7 @@ package ru.asteac.blog.usermanagment.service;
 
 import org.springframework.http.ResponseEntity;
 import ru.asteac.blog.domain.dto.request.LogInRequest;
+import ru.asteac.blog.domain.dto.request.PasswordChangeRequest;
 import ru.asteac.blog.domain.dto.request.SignUpRequest;
 import ru.asteac.blog.domain.dto.request.UserInfoEditRequest;
 
@@ -12,6 +13,8 @@ public interface UserService {
     ResponseEntity<?> registerUser(SignUpRequest signUpRequest);
 
     ResponseEntity<?> updateUser(Long userId, String username, UserInfoEditRequest userInfoEditRequest);
+
+    ResponseEntity<?> passwordChange(Long userId, String username, PasswordChangeRequest passwordChangeRequest);
 
     ResponseEntity<?> getById(Long id);
 
