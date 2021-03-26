@@ -1,6 +1,7 @@
 package ru.asteac.blog.usermanagment.service.impl;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,9 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.asteac.blog.domain.dto.request.PasswordChangeRequest;
 import ru.asteac.blog.domain.dto.request.UserInfoEditRequest;
 import ru.asteac.blog.domain.dto.response.MessageResponse;
 import ru.asteac.blog.domain.mapper.UserMapper;
@@ -57,8 +60,13 @@ public class UserServiceImpl implements UserService {
     private final static String USERNAME_INVALID = "The username is already taken.";
     private final static String EMAIL_INVALID = "The email is already taken.";
 
+    private final static String PASSWORD_CHANGE_SUCCESSFUL = "The user password was updated successfully.";
+    private final static String PASSWORD_NEW_MATCH_INVALID = "New passwords doesn't match";
+    private final static String PASSWORD_OLD_EQUALS_INVALID = "Wrong old password";
+    private final static String PASSWORD_PREVIOUS_EQUALS_INVALID = "New password can't be equal to old one";
+
     public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-            this.jwtUtils = jwtUtils;
+        this.jwtUtils = jwtUtils;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
@@ -177,6 +185,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<?> passwordChange(Long userId, String username, PasswordChangeRequest passwordChangeRequest) {
+        User userFromDb = userRepository.getById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!passwordEncoder.matches(passwordChangeRequest.getOldPassword(), userFromDb.getPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(PASSWORD_OLD_EQUALS_INVALID));
+
+        } else if (!passwordChangeRequest.getNewPassword()
+                .equals(passwordChangeRequest.getMatchingPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(PASSWORD_NEW_MATCH_INVALID));
+
+        } else if (passwordEncoder.matches(passwordChangeRequest.getNewPassword(), userFromDb.getPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(PASSWORD_PREVIOUS_EQUALS_INVALID));
+
+        } else {
+            userFromDb.setPassword(passwordEncoder
+                    .encode(passwordChangeRequest.getNewPassword()));
+            userRepository.save(userFromDb);
+
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse(PASSWORD_CHANGE_SUCCESSFUL));
+        }
+    }
+
+
+
+    @Override
     public ResponseEntity<?> getById(Long id) {
         User user = userRepository.getById(id)
                 .orElseThrow(UserNotFoundException::new);
@@ -219,7 +261,7 @@ public class UserServiceImpl implements UserService {
         channel.removeSubscriber(user);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body(UNSUBSCRIPTION_SUCCESSFUL);
+        return ResponseEntity.ok().body(new MessageResponse(UNSUBSCRIPTION_SUCCESSFUL));
     }
 
     private Role getByRole(ERole erole){
