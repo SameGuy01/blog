@@ -25,6 +25,4 @@ public class UserInfoEditRequest {
     @NotBlank(message = "About must be not empty")
     private String about;
 
-    @NotBlank(message = "Password can't be empty")
-    private String password;
 }

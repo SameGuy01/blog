@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     private final static String PASSWORD_OLD_EQUALS_INVALID = "Wrong old password";
     private final static String PASSWORD_PREVIOUS_EQUALS_INVALID = "New password can't be equal to old one";
 
-    public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public UserServiceImpl(JwtUtils jwtUtils, UserMapper userMapper, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.jwtUtils = jwtUtils;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
