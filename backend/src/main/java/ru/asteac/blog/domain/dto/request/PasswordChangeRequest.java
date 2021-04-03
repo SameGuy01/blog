@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 public class PasswordChangeRequest {
 
     @NotBlank(message = "Password can't be empty")
+    @Size(min = 6, max = 40, message = "Password size must be between 6 and 40")
     private String oldPassword;
 
     @NotBlank(message = "New password can't be empty")
@@ -16,5 +17,7 @@ public class PasswordChangeRequest {
     private String newPassword;
 
     @NotBlank(message = "Matching password can't be empty")
+    @Size(min = 6, max = 40, message = "Password size must be between 6 and 40")
     private String matchingPassword;
+
 }

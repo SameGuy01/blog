@@ -41,11 +41,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     private final static String REGISTRATION_SUCCESSFUL = "The user registered successfully.";
@@ -155,30 +155,30 @@ public class UserServiceImpl implements UserService {
         User userFromDb = userRepository.getById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userInfoEditRequest.getId()))) {
+        if(!userFromDb.getUsername().equals(username) || !userFromDb.getId().equals(Long.valueOf(userInfoEditRequest.getId()))){
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(new MessageResponse(UPDATE_ERROR));
         }
         User updateUser = userMapper.toEntity(userInfoEditRequest);
 
-        if (!updateUser.getUsername().equals(userFromDb.getUsername())) {
-            if (userRepository.existsByUsername(updateUser.getUsername())) {
+        if(!updateUser.getUsername().equals(userFromDb.getUsername())){
+            if(userRepository.existsByUsername(updateUser.getUsername())){
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse(USERNAME_INVALID));
             }
         }
 
-        if (!updateUser.getEmail().equals(userFromDb.getEmail())) {
-            if (userRepository.existsByEmail(updateUser.getEmail())) {
+        if(!updateUser.getEmail().equals(userFromDb.getEmail())){
+            if(userRepository.existsByEmail(updateUser.getEmail())){
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse(EMAIL_INVALID));
             }
         }
 
-        BeanUtils.copyProperties(updateUser, userFromDb, "id", "postList", "password", "registeredAt", "roles", "isActive");
+        BeanUtils.copyProperties(updateUser,userFromDb, "id", "postList", "password", "registeredAt", "roles", "isActive");
         userRepository.save(userFromDb);
 
         return ResponseEntity.ok().body(new MessageResponse(UPDATE_SUCCESSFUL));
